@@ -10,5 +10,7 @@ dist/
 frontend/.angular/
 frontend/dist/
 backend/media/
+backend/db.sqlite3
+backend/app/uploads/
 .superpowers/
 docs/superpowers/
