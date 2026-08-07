@@ -1,0 +1,50 @@
+name: Deploy PISUNPA a VPS
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-pisunpa
+  cancel-in-progress: true
+
+env:
+  PROJECT_DIR: /home/${{ secrets.VPS_USER }}/Proyecto-51-PISUNPA
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Actualizar codigo y reconstruir contenedores
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: PROJECT_DIR
+          script: |
+            cd "$PROJECT_DIR"
+            git pull origin main
+            docker compose down
+            docker compose up -d --build
+
+      - name: Ejecutar migraciones de la base de datos
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          envs: PROJECT_DIR
+          script: |
+            cd "$PROJECT_DIR"
+            for i in $(seq 1 6); do
+              if docker compose exec -T backend python manage.py migrate --noinput; then
+                echo "Migraciones aplicadas correctamente"
+                exit 0
+              fi
+              echo "El backend aun no esta listo, reintentando en 10 segundos (intento $i/6)..."
+              sleep 10
+            done
+            exit 1
