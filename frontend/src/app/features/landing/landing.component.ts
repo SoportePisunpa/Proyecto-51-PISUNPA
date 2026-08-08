@@ -1068,7 +1068,7 @@ export class LandingComponent {
       cargo: 'Desarrollador Backend Servicios',
       area: 'Backend',
       descripcion: 'Servicios para módulos de supletorios y egresados y validaciones del negocio.',
-      fotoUrl: 'assets/images/desarrolladores/DARIO.jpeg'
+      fotoUrl: 'assets/images/desarrolladores/DARIO.jpg'
     },
     {
       nombre: 'Mateo Alejandro Quiñones',
