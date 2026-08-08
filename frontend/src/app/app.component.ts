@@ -29,7 +29,7 @@ export class AppComponent {
 
   readonly esRutaPublica = computed(() => {
     const url = this.currentUrl();
-    return url === '/' || url.startsWith('/landing') || url.startsWith('/login') || url.startsWith('/registro') || url.startsWith('/programa') || url.startsWith('/malla') || url.startsWith('/docentes') || url.startsWith('/investigacion');
+    return url === '/' || url.startsWith('/landing') || url.startsWith('/login') || url.startsWith('/registro') || url.startsWith('/programa') || url.startsWith('/malla') || url.startsWith('/docentes') || url.startsWith('/investigacion') || url.startsWith('/proyecto-grado') || url.startsWith('/proyeccion-social');
   });
 
   rolLabel = computed(() => {

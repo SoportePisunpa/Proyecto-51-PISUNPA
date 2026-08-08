@@ -22,6 +22,8 @@ import { AsignacionProfesoresComponent } from './features/admin/asignacion-profe
 import { ProgramaComponent } from './features/programa/programa.component';
 import { DocentesComponent } from './features/docentes/docentes.component';
 import { InvestigacionComponent } from './features/investigacion/investigacion.component';
+import { ProyectoGradoComponent } from './features/proyecto-grado/proyecto-grado.component';
+import { ProyeccionSocialComponent } from './features/proyeccion-social/proyeccion-social.component';
 import { MallaComponent } from './features/malla/malla.component';
 import { LandingComponent } from './features/landing/landing.component';
 import { authGuard } from './core/auth/auth.guard';
@@ -38,6 +40,8 @@ export const routes: Routes = [
   { path: 'malla', component: MallaComponent },
   { path: 'docentes', component: DocentesComponent },
   { path: 'investigacion', component: InvestigacionComponent },
+  { path: 'proyecto-grado', component: ProyectoGradoComponent },
+  { path: 'proyeccion-social', component: ProyeccionSocialComponent },
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
   { path: 'registro/docente', component: RegistroDocenteComponent },

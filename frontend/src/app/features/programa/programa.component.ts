@@ -1,10 +1,11 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 
 @Component({
   selector: 'app-programa',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, NavbarComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: [`
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
@@ -18,50 +19,6 @@ import { RouterLink } from '@angular/router';
       color: #0f172a;
       overflow-x: hidden;
     }
-
-    /* ===== NAVBAR ===== */
-    .landing-header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid #e2e8f0;
-      padding: 0.85rem 2.5rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-    }
-
-    .header-container {
-      max-width: 1280px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .brand-group {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      text-decoration: none;
-    }
-
-    .brand-logo-img { height: 48px; width: auto; object-fit: contain; }
-    .brand-text { display: flex; flex-direction: column; }
-    .brand-title-small { color: #0f172a; font-size: 1rem; font-weight: 900; letter-spacing: 0.02em; text-transform: uppercase; line-height: 1.15; }
-    .brand-sub-small { color: #15803d; font-size: 0.74rem; font-weight: 700; }
-
-    .nav-menu { display: flex; align-items: center; gap: 2rem; list-style: none; margin: 0; padding: 0; }
-    .nav-menu a { color: #475569; text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: color 0.2s ease; cursor: pointer; }
-    .nav-menu a.active, .nav-menu a:hover { color: #15803d; }
-
-    .nav-actions { display: flex; align-items: center; gap: 0.85rem; }
-    .btn-login-outline { padding: 0.55rem 1.35rem; border: 2px solid #15803d; border-radius: 8px; color: #15803d; font-size: 0.88rem; font-weight: 700; text-decoration: none; background: transparent; }
-    .btn-login-outline:hover { background: #15803d; color: #ffffff; }
-    .btn-register-solid { padding: 0.6rem 1.35rem; background: linear-gradient(135deg, #15803d 0%, #166534 100%); color: #ffffff; border-radius: 8px; font-size: 0.88rem; font-weight: 700; text-decoration: none; box-shadow: 0 4px 14px rgba(21, 128, 61, 0.4); }
 
     /* ===== HERO PHOTO BACKGROUND ===== */
     .page-hero {
@@ -316,8 +273,6 @@ import { RouterLink } from '@angular/router';
     }
 
     @media (max-width: 640px) {
-      .landing-header { padding: 0.75rem 1.25rem; }
-      .nav-menu { display: none; }
       .page-hero { padding: 8rem 1.5rem 4rem; }
       .page-hero h1 { font-size: 2.2rem; }
       .ficha-tecnica-bar { grid-template-columns: 1fr; }
@@ -325,33 +280,7 @@ import { RouterLink } from '@angular/router';
     }
   `],
   template: `
-    <!-- NAVBAR -->
-    <header class="landing-header">
-      <div class="header-container">
-        <a routerLink="/" class="brand-group">
-          <img src="assets/images/logo_unpa.png" alt="Logo Universidad del Pacífico" class="brand-logo-img" />
-          <div class="brand-text">
-            <span class="brand-title-small">Universidad del Pacífico</span>
-            <span class="brand-sub-small">Ingeniería de Sistemas — PISUNPA</span>
-          </div>
-        </a>
-
-        <nav>
-          <ul class="nav-menu">
-            <li><a routerLink="/landing">Inicio</a></li>
-            <li><a routerLink="/programa" class="active">El Programa</a></li>
-            <li><a routerLink="/malla">Malla Curricular</a></li>
-            <li><a routerLink="/docentes">Docentes</a></li>
-            <li><a routerLink="/investigacion">Investigación</a></li>
-          </ul>
-        </nav>
-
-        <div class="nav-actions">
-          <a routerLink="/login" class="btn-login-outline">Iniciar Sesión</a>
-          <a routerLink="/registro" class="btn-register-solid">Registrarse</a>
-        </div>
-      </div>
-    </header>
+    <app-navbar></app-navbar>
 
     <!-- HERO CON IMAGEN BRLLANTE -->
     <section class="page-hero">
