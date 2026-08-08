@@ -15,6 +15,13 @@ class Usuario(AbstractUser):
     creado = models.DateTimeField(auto_now_add=True)
     actualizado = models.DateTimeField(auto_now=True)
     documento_identidad = models.CharField(max_length=20, blank=True, default='')
+    programa = models.ForeignKey(
+        'egresados.Programa',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='usuarios',
+    )
 
     ESTADO_CHOICES = [
         ('pendiente_aprobacion', 'Pendiente de aprobación'),
