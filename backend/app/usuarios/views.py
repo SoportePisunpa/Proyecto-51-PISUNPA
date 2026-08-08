@@ -1,4 +1,4 @@
-﻿import re
+import re
 from uuid import UUID
 
 from django.db import models, transaction
@@ -85,9 +85,9 @@ class RegistroConRolView(APIView):
             {
                 "mensaje": (
                     "Registro como egresado pendiente de "
-                    "validaciÃ³n."
+                    "validación."
                     if data["tipo_usuario"] == "egresado"
-                    else "Tu cuenta estÃ¡ pendiente de aprobaciÃ³n "
+                    else "Tu cuenta está pendiente de aprobación "
                     "por el director/administrador."
                 )
             },
