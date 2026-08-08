@@ -986,7 +986,7 @@ Sus principales áreas de interés incluyen la Ciencia de Datos, la Inteligencia
       fotoUrl: 'assets/images/desarrolladores/DARIO.jpg'
     },
     {
-      nombre: 'Mateo Alejandro Quiñones',
+      nombre: 'Duvan Andrez Cardona Alomias',
       cargo: 'Desarrollador Backend Seguridad',
       area: 'Backend',
       descripcion: 'Autenticación de usuarios, gestión de permisos JWT y seguridad de datos.',
