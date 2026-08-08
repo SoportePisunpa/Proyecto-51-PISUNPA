@@ -1168,7 +1168,7 @@ Sus principales áreas de interés incluyen la Ciencia de Datos, la Inteligencia
       nombre: 'Jefferson Manuel Valencia Riascos',
       cargo: 'Desarrollador Frontend UI/UX',
       area: 'Frontend',
-      descripcion: 'Diseño visual de interfaz de usuario, maquetación adaptativa y experiencia de usuario.',
+      descripcion: 'Implementación de componentes interactivos, optimización de flujos de navegación y maquetación responsiva.',
       fotoUrl: 'assets/images/desarrolladores/Jefferson%20Valencia.jpeg'
     },
     {
