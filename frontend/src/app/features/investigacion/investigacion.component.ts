@@ -608,7 +608,6 @@ interface SemilleroInvestigacion {
             <li><a routerLink="/landing">Inicio</a></li>
             <li><a routerLink="/programa">El Programa</a></li>
             <li><a routerLink="/malla">Malla Curricular</a></li>
-            <li><a routerLink="/landing" fragment="acerca">Acerca de</a></li>
             <li><a routerLink="/docentes">Docentes</a></li>
             <li><a routerLink="/investigacion" class="active">Investigación</a></li>
           </ul>
@@ -629,7 +628,7 @@ interface SemilleroInvestigacion {
       <div class="page-hero-container">
         <h1>Investigación e <span>Innovación Tecnológica</span></h1>
         <p>
-          Universidad del Pacífico — Desarrollo de conocimiento científico, líneas de investigación, Grupo IES y semilleros formativos.
+          Ingeniería de Sistemas — Desarrollo de conocimiento científico, líneas de investigación, Grupo IES y semilleros formativos.
         </p>
       </div>
     </section>

@@ -768,7 +768,6 @@ export interface CategoriaExplorador {
             <li><a routerLink="/landing">Inicio</a></li>
             <li><a routerLink="/programa">El Programa</a></li>
             <li><a routerLink="/malla" class="active">Malla Curricular</a></li>
-            <li><a routerLink="/landing" fragment="acerca">Acerca de</a></li>
             <li><a routerLink="/docentes">Docentes</a></li>
             <li><a routerLink="/investigacion">Investigación</a></li>
           </ul>

@@ -8,6 +8,8 @@ interface IntegranteEquipo {
   descripcion: string;
   fotoUrl: string;
   esLider?: boolean;
+  perfilCompleto?: string;
+  titulos?: string[];
 }
 
 @Component({
@@ -370,6 +372,7 @@ interface IntegranteEquipo {
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
       position: relative;
+      cursor: pointer;
     }
 
     .person-card:hover {
@@ -653,6 +656,69 @@ interface IntegranteEquipo {
       color: rgba(255, 255, 255, 0.75);
     }
 
+    /* MODAL INTEGRANTES */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .team-modal {
+      background: #ffffff;
+      border-radius: 24px;
+      max-width: 750px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      position: relative;
+      animation: slideUp 0.3s ease;
+    }
+    .modal-header-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      padding: 3rem 3rem 2.5rem;
+      color: #ffffff;
+      position: relative;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    .btn-close-modal {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.2s;
+    }
+    .btn-close-modal:hover { background: rgba(255, 255, 255, 0.25); transform: rotate(90deg); }
+    .modal-person-photo { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid #4ade80; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+    .modal-person-title h3 { font-size: 1.8rem; font-weight: 900; color: #ffffff; margin-bottom: 0.4rem; letter-spacing: -0.02em; }
+    .modal-person-title p { font-size: 1rem; color: #4ade80; font-weight: 700; margin-bottom: 0.5rem; }
+    .modal-body-content { padding: 3rem; display: flex; flex-direction: column; gap: 2.5rem; }
+    .modal-section-block h5 { font-size: 0.95rem; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .modal-section-block h5::before { content: ''; width: 24px; height: 3px; background: #15803d; border-radius: 2px; }
+    .modal-section-block p { font-size: 1rem; color: #334155; line-height: 1.75; white-space: pre-wrap; }
+
     /* RESPONSIVE */
     @media (max-width: 1024px) {
       .hero-title { font-size: 2.8rem; }
@@ -689,7 +755,6 @@ interface IntegranteEquipo {
             <li><a (click)="scrollToSection('inicio', $event)">Inicio</a></li>
             <li><a routerLink="/programa">El Programa</a></li>
             <li><a routerLink="/malla">Malla Curricular</a></li>
-            <li><a (click)="scrollToSection('acerca', $event)">Acerca de</a></li>
             <li><a routerLink="/docentes">Docentes</a></li>
             <li><a routerLink="/investigacion">Investigación</a></li>
           </ul>
@@ -774,7 +839,7 @@ interface IntegranteEquipo {
 
           <div class="team-grid-9">
             <!-- 1. DOCENTE ASESOR (LÍDER DESTACADO) -->
-            <div class="person-card leader">
+            <div class="person-card leader" (click)="abrirModal(docenteLider)">
               <div>
                 <div class="person-header-group">
                   <img [src]="docenteLider.fotoUrl" [alt]="docenteLider.nombre" class="person-photo-img" />
@@ -794,7 +859,7 @@ interface IntegranteEquipo {
 
             <!-- 8 ESTUDIANTES DESARROLLADORES INDIVIDUALES -->
             @for (estudiante of estudiantesIntegrantes; track estudiante.nombre) {
-              <div class="person-card">
+              <div class="person-card" (click)="abrirModal(estudiante)">
                 <div>
                   <div class="person-header-group">
                     <img [src]="estudiante.fotoUrl" [alt]="estudiante.nombre" class="person-photo-img" />
@@ -983,6 +1048,39 @@ interface IntegranteEquipo {
       </section>
     </main>
 
+    <!-- MODAL INTEGRANTE EQUIPO -->
+    @if (integranteSeleccionado) {
+      <div class="modal-backdrop" (click)="cerrarModal()">
+        <div class="team-modal" (click)="$event.stopPropagation()">
+          <div class="modal-header-banner">
+            <button class="btn-close-modal" (click)="cerrarModal()">✕</button>
+            <img [src]="integranteSeleccionado.fotoUrl" [alt]="integranteSeleccionado.nombre" class="modal-person-photo" />
+            <div class="modal-person-title">
+              <h3>{{ integranteSeleccionado.nombre }}</h3>
+              <p>{{ integranteSeleccionado.cargo }}</p>
+              <span style="color: #94a3b8; font-size: 0.85rem; font-weight: 700;">{{ integranteSeleccionado.area }}</span>
+            </div>
+          </div>
+          <div class="modal-body-content">
+            <div class="modal-section-block">
+              <h5>Perfil & Contribución al Proyecto</h5>
+              <p>{{ integranteSeleccionado.perfilCompleto || integranteSeleccionado.descripcion }}</p>
+            </div>
+            @if (integranteSeleccionado.titulos && integranteSeleccionado.titulos.length > 0) {
+              <div class="modal-section-block">
+                <h5>Títulos y Grados Académicos</h5>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.85rem;">
+                  @for (t of integranteSeleccionado.titulos; track t) {
+                    <li style="font-size: 0.95rem; color: #334155; font-weight: 500; display: flex; align-items: flex-start; gap: 0.75rem; line-height: 1.5;"><span style="font-size: 1.1rem; flex-shrink: 0; margin-top: -0.1rem;">🎓</span> {{ t }}</li>
+                  }
+                </ul>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
     <!-- FOOTER (VERDE INSTITUCIONAL ELEGANTE) -->
     <footer id="contacto" class="landing-footer">
       <div class="footer-container">
@@ -999,7 +1097,6 @@ interface IntegranteEquipo {
           <ul class="footer-links">
             <li><button (click)="scrollToSection('inicio', $event)">Inicio</button></li>
             <li><a routerLink="/programa">El Programa</a></li>
-            <li><button (click)="scrollToSection('acerca', $event)">Acerca de</button></li>
             <li><a routerLink="/docentes">Docentes</a></li>
             <li><a routerLink="/investigacion">Investigación</a></li>
             <li><button (click)="scrollToSection('supletorios', $event)">Supletorios</button></li>
@@ -1032,18 +1129,36 @@ interface IntegranteEquipo {
   `
 })
 export class LandingComponent {
+  integranteSeleccionado: IntegranteEquipo | null = null;
+
   readonly docenteLider: IntegranteEquipo = {
-    nombre: 'MSc. Carlos Alberto Mina',
-    cargo: 'Líder & Docente Asesor',
-    area: 'Magíster en Ingeniería',
-    descripcion: 'Supervisión metodológica, dirección de arquitectura y tutoría del equipo de desarrollo PISUNPA.',
-    fotoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80',
-    esLider: true
+    nombre: 'MSc. Wilman A. Quiñónez Valencia',
+    cargo: 'Líder del Proyecto & Docente Asesor',
+    area: 'Gestor del Proyecto 51',
+    descripcion: 'Líder y gestor del Proyecto 51. Especialista en ciencia de datos, inteligencia artificial e innovación tecnológica.',
+    fotoUrl: 'assets/images/desarrolladores/Wilman.jpeg',
+    esLider: true,
+    perfilCompleto: `Ingeniero de Sistemas y egresado del Programa de Ingeniería de Sistemas de la Universidad del Pacífico, institución en la que actualmente se desempeña como docente universitario, contribuyendo a la formación de profesionales competentes en las áreas de desarrollo de software, ciencia de datos, inteligencia artificial e innovación tecnológica.
+
+Es Magíster en Ciencia de Datos y Magíster en Inteligencia Artificial Aplicada por la Universidad Icesi, formación que ha fortalecido sus competencias en analítica avanzada, aprendizaje automático, inteligencia artificial, ingeniería de datos, transformación digital y desarrollo de soluciones tecnológicas basadas en datos para la toma de decisiones.
+
+Como docente del Programa de Ingeniería de Sistemas, ha orientado diversas asignaturas enfocadas en el fortalecimiento de las competencias profesionales de los estudiantes. Entre ellas se destaca la Asignatura Electiva Profesional III, espacio académico desde el cual lideró la concepción, estructuración e implementación del Proyecto 51, una estrategia de aprendizaje basada en proyectos (Project-Based Learning) que busca integrar los conocimientos adquiridos durante la carrera mediante el desarrollo de soluciones tecnológicas aplicadas a necesidades reales de la Universidad y del entorno.
+
+En este contexto, es líder y gestor del Proyecto 51, iniciativa académica que promueve el trabajo colaborativo, la investigación aplicada y la innovación como pilares fundamentales de la formación profesional. Como resultado de este proceso se consolidó la primera sub-línea denominada PISUNPA (Plataforma Integral de Servicios de la Universidad del Pacífico).
+
+Bajo su liderazgo, el Proyecto 51 ha permitido que estudiantes de diferentes semestres participen en equipos multidisciplinarios para desarrollar aplicaciones utilizando metodologías ágiles, arquitectura de software, inteligencia artificial, ciencia de datos, computación en la nube, ciberseguridad y desarrollo web, fortaleciendo competencias técnicas y profesionales alineadas con las necesidades del sector productivo y los desafíos de la transformación digital.
+
+Sus principales áreas de interés incluyen la Ciencia de Datos, la Inteligencia Artificial, el Machine Learning, el Deep Learning, MLOps, la Ingeniería de Software, la Arquitectura de Soluciones, la Computación en la Nube y la Transformación Digital.`,
+    titulos: [
+      'Magíster en Ciencia de Datos — Universidad Icesi',
+      'Magíster en Inteligencia Artificial Aplicada — Universidad Icesi',
+      'Ingeniero de Sistemas — Universidad del Pacífico'
+    ]
   };
 
   readonly estudiantesIntegrantes: IntegranteEquipo[] = [
     {
-      nombre: 'Juan Pablo Valencia',
+      nombre: 'Jader Riascos',
       cargo: 'Desarrollador Frontend UI/UX',
       area: 'Frontend',
       descripcion: 'Diseño visual de interfaz de usuario, maquetación adaptativa y experiencia de usuario.',
@@ -1108,5 +1223,13 @@ export class LandingComponent {
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  }
+
+  abrirModal(integrante: IntegranteEquipo): void {
+    this.integranteSeleccionado = integrante;
+  }
+
+  cerrarModal(): void {
+    this.integranteSeleccionado = null;
   }
 }
