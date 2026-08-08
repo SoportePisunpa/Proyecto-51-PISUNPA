@@ -150,7 +150,7 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
     const rol = this.authService.rolActual();
     if (!rol) return '/';
     if (this.esNotificacionEvento(notif)) {
-      if (rol === 'administrador' || rol === 'director' || rol === 'secretario' || rol === 'coordinador') {
+      if (rol === 'administrador' || rol === 'director' || rol === 'secretario' || rol === 'coordinador_egresados') {
         return '/admin/eventos';
       }
       if (rol === 'egresado') {

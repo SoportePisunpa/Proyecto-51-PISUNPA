@@ -38,7 +38,7 @@ export class AuthService {
   }
 
   esCoordinador(): boolean {
-    return this.tieneRol('coordinador');
+    return this.tieneRol('coordinador_egresados');
   }
 
   constructor() {

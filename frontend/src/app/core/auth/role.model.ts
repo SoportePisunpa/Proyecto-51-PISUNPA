@@ -1,12 +1,12 @@
-export type Rol = 'administrador' | 'director' | 'secretario' | 'coordinador' | 'profesor' | 'egresado' | 'estudiante';
+export type Rol = 'administrador' | 'director' | 'secretario' | 'coordinador_egresados' | 'profesor' | 'egresado' | 'estudiante';
 
 const ROL_ALIASES: Record<string, Rol> = {
   admin: 'administrador',
   administrador: 'administrador',
   director: 'director',
   secretario: 'secretario',
-  coordinador: 'coordinador',
-  coord_egresados: 'coordinador',
+  coordinador: 'coordinador_egresados',
+  coord_egresados: 'coordinador_egresados',
   profesor: 'profesor',
   docente: 'profesor',
   egresado: 'egresado',
@@ -23,7 +23,7 @@ export const ROL_LABELS: Record<Rol, string> = {
   administrador: 'Administrador',
   director: 'Director',
   secretario: 'Secretario',
-  coordinador: 'Coordinador de Egresados',
+  coordinador_egresados: 'Coordinador de Egresados',
   profesor: 'Profesor',
   egresado: 'Egresado',
   estudiante: 'Estudiante',

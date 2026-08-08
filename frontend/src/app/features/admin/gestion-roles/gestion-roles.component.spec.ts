@@ -23,7 +23,7 @@ describe('GestionRolesComponent', () => {
     id: '485e5f9b-2c97-4139-aebd-868ce1cf343d',
     email: 'coordinador@pisunpa.com',
     nombre: 'Coordinador Egresados',
-    rol: 'coordinador',
+    rol: 'coordinador_egresados',
   } as Usuario;
 
   beforeEach(async () => {
@@ -56,7 +56,7 @@ describe('GestionRolesComponent', () => {
     const select = (fixture.nativeElement as HTMLElement).querySelector<HTMLSelectElement>('select')!;
 
     expect(select).toBeTruthy();
-    expect(select.value).toBe('coordinador');
+    expect(select.value).toBe('coordinador_egresados');
 
     select.value = 'secretario';
     select.dispatchEvent(new Event('change'));
@@ -75,13 +75,13 @@ describe('GestionRolesComponent', () => {
     expect(feedback.show).toHaveBeenCalledWith('Rol actualizado.');
   });
 
-  it('el formulario de creación muestra por defecto el rol coordinador', () => {
+  it('el formulario de creación muestra por defecto el rol coordinador de egresados', () => {
     const botonNuevo = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button.btn-nuevo')!;
     botonNuevo.click();
     fixture.detectChanges();
 
     const select = (fixture.nativeElement as HTMLElement).querySelector<HTMLSelectElement>('.form-crear select')!;
     expect(select).toBeTruthy();
-    expect(select.value).toBe('coordinador');
+    expect(select.value).toBe('coordinador_egresados');
   });
 });

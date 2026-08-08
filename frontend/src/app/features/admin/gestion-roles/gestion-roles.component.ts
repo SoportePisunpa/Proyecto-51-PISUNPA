@@ -72,7 +72,7 @@ export class GestionRolesComponent implements OnInit {
   readonly nuevoApellido = signal('');
   readonly nuevoDocumento = signal('');
   readonly nuevoPassword = signal('');
-  readonly nuevoRol = signal<Rol>('coordinador');
+  readonly nuevoRol = signal<Rol>('coordinador_egresados');
 
   readonly esSuperadmin = this.authService.tieneRol('director');
 
@@ -83,7 +83,7 @@ export class GestionRolesComponent implements OnInit {
   });
 
   readonly rolesCreables = computed<Rol[]>(() => {
-    const base: Rol[] = ['administrador', 'coordinador', 'secretario', 'profesor'];
+    const base: Rol[] = ['administrador', 'coordinador_egresados', 'secretario', 'profesor'];
     if (this.esSuperadmin) return base;
     return base.filter(r => r !== 'administrador');
   });
@@ -199,7 +199,7 @@ export class GestionRolesComponent implements OnInit {
         this.nuevoApellido.set('');
         this.nuevoDocumento.set('');
         this.nuevoPassword.set('');
-        this.nuevoRol.set('coordinador');
+        this.nuevoRol.set('coordinador_egresados');
         this.feedback.show('Usuario creado.');
       },
       error: (err) => {

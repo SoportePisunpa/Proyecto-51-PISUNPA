@@ -68,7 +68,7 @@ export class UsuarioModalComponent implements OnInit {
       ([value, label]) => ({ value: value as Rol, label })
     );
     if (this.esEdicion()) return opciones;
-    return opciones.filter(r => ['administrador', 'coordinador', 'secretario'].includes(r.value));
+    return opciones.filter(r => ['administrador', 'coordinador_egresados', 'secretario'].includes(r.value));
   });
 
   ngOnInit(): void {
