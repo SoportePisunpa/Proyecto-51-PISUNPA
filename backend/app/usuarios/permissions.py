@@ -4,14 +4,14 @@ from rest_framework.permissions import BasePermission, IsAuthenticated
 ROL_DIRECTOR = 'director'
 ROL_ADMIN = 'administrador'
 ROL_SECRETARIO = 'secretario'
-ROL_COORDINADOR = 'coordinador'
+ROL_COORDINADOR_EGRESADOS = 'coordinador_egresados'
 ROL_EGRESADO = 'egresado'
 ROL_PROFESOR = 'profesor'
 ROL_ESTUDIANTE = 'estudiante'
 
 ADMIN_LECTURA = (ROL_ADMIN, ROL_DIRECTOR, ROL_SECRETARIO)
 ADMIN_ESCRITURA = (ROL_ADMIN, ROL_DIRECTOR)
-COORDINADOR_EGRESADOS = (ROL_COORDINADOR, ROL_ADMIN, ROL_DIRECTOR)
+COORDINADOR_EGRESADOS = (ROL_COORDINADOR_EGRESADOS, ROL_ADMIN, ROL_DIRECTOR)
 
 
 def rol_de(user):

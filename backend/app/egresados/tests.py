@@ -30,7 +30,7 @@ def crear_usuario(email, rol_nombre, documento):
 class EventosTest(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.coordinador = crear_usuario('coord@test.com', 'coordinador', 'E01')
+        self.coordinador = crear_usuario('coord@test.com', 'coordinador_egresados', 'E01')
         self.admin = crear_usuario('admin@test.com', 'administrador', 'E02')
         self.secretario = crear_usuario('sec@test.com', 'secretario', 'E03')
         self.egresado = crear_usuario('egr@test.com', 'egresado', 'E04')
