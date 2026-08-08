@@ -268,17 +268,23 @@ class RegistroDocenteConTokenSerializer(serializers.Serializer):
 class UsuarioGestionSerializer(serializers.ModelSerializer):
     rol = serializers.SerializerMethodField()
     nombre = serializers.SerializerMethodField()
+    programa = serializers.SerializerMethodField()
 
     class Meta:
         model = Usuario
         fields = ['id', 'first_name', 'last_name', 'nombre', 'email',
-                  'documento', 'telefono', 'estado', 'creado', 'rol']
+                  'documento', 'telefono', 'estado', 'creado', 'rol', 'programa']
 
     def get_rol(self, obj):
         return obj.rol.nombre if obj.rol else None
 
     def get_nombre(self, obj):
         return obj.get_full_name() or obj.email
+
+    def get_programa(self, obj):
+        if not obj.programa_id:
+            return None
+        return {'id': str(obj.programa.id), 'nombre': obj.programa.nombre}
 
 
 class CambioRolSerializer(serializers.Serializer):

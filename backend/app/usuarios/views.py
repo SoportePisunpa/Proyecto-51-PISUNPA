@@ -172,6 +172,128 @@ class EstudiantesPendientesView(generics.ListAPIView):
         ).select_related('rol').order_by('-creado')
 
 
+class EstudiantesListView(generics.ListAPIView):
+    serializer_class = UsuarioGestionSerializer
+    permission_classes = [IsAuthenticated, EsAdminLectura]
+
+    def get_queryset(self):
+        qs = Usuario.objects.filter(
+            rol__nombre='estudiante', estado='aprobado'
+        ).select_related('rol', 'programa').order_by('-creado')
+        query = self.request.query_params.get('q', '').strip()
+        programa = self.request.query_params.get('programa', '').strip()
+        if query:
+            qs = qs.filter(
+                models.Q(email__icontains=query)
+                | models.Q(first_name__icontains=query)
+                | models.Q(last_name__icontains=query)
+                | models.Q(documento__icontains=query)
+            )
+        if programa:
+            qs = qs.filter(programa_id=programa)
+        return qs
+
+
+class EstudiantesImportView(APIView):
+    permission_classes = [IsAuthenticated, EsAdminEscritura]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request):
+        archivo = request.FILES.get('archivo')
+        if not archivo:
+            return Response({'error': 'Debe subir un archivo Excel.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            wb = load_workbook(archivo, read_only=True)
+            ws = wb.active
+            rows = list(ws.iter_rows(min_row=3, values_only=True))
+        except Exception:
+            return Response({'error': 'Formato de archivo no válido.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        rol_estudiante = Rol.objects.get(nombre='estudiante')
+        creados = 0
+        duplicados = 0
+        errores = []
+        estudiantes_unicos = {}
+
+        for row in rows:
+            nombre = str(row[0]).strip() if row[0] else None
+            email = str(row[1]).strip() if len(row) > 1 and row[1] else None
+            programa_nombre = str(row[2]).strip() if len(row) > 2 and row[2] else None
+
+            if not nombre or not email:
+                continue
+
+            email = email.lower()
+            if not re.match(r'^[^@\s]+@[^@\s]+\.[^@\s]+$', email):
+                errores.append(f'Email inválido para {nombre}: {email}')
+                continue
+
+            if email in estudiantes_unicos:
+                continue
+
+            estudiantes_unicos[email] = (nombre, programa_nombre)
+
+        for email, (nombre, programa_nombre) in estudiantes_unicos.items():
+            if Usuario.objects.filter(email=email).exists():
+                duplicados += 1
+                continue
+
+            partes = nombre.split(' ', 1)
+            first_name = partes[0]
+            last_name = partes[1] if len(partes) > 1 else ''
+
+            programa = None
+            if programa_nombre:
+                programa = Programa.objects.filter(nombre__icontains=programa_nombre).first()
+                if not programa:
+                    errores.append(f'Programa no encontrado para {nombre}: {programa_nombre}')
+
+            with transaction.atomic():
+                usuario = Usuario(
+                    username=email,
+                    email=email,
+                    first_name=first_name,
+                    last_name=last_name,
+                    documento=email,
+                    rol=rol_estudiante,
+                    programa=programa,
+                    estado='aprobado',
+                )
+                usuario.set_password(Usuario.objects.make_random_password())
+                usuario.save()
+                creados += 1
+
+        return Response({
+            'creados': creados,
+            'duplicados': duplicados,
+            'errores': errores,
+            'total_procesados': len(estudiantes_unicos),
+        })
+
+
+class CambiarProgramaEstudianteView(APIView):
+    permission_classes = [IsAuthenticated, EsAdminEscritura]
+
+    def patch(self, request, pk):
+        try:
+            usuario = Usuario.objects.get(pk=pk, rol__nombre='estudiante')
+        except Usuario.DoesNotExist:
+            return Response({'error': 'Estudiante no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+        programa_id = request.data.get('programa')
+        if programa_id:
+            try:
+                programa = Programa.objects.get(id=programa_id)
+            except (Programa.DoesNotExist, ValueError):
+                return Response({'error': 'Programa inválido.'}, status=status.HTTP_400_BAD_REQUEST)
+            usuario.programa = programa
+        else:
+            usuario.programa = None
+        usuario.save(update_fields=['programa', 'actualizado'])
+        return Response(UsuarioGestionSerializer(usuario).data)
+
+
 class AprobarEstudianteView(APIView):
     permission_classes = [IsAuthenticated, EsAdminEscritura]
 
