@@ -37,7 +37,7 @@ USUARIOS = [
         'password': 'coordinador123',
         'first_name': 'Coordinador',
         'last_name': 'Egresados',
-        'rol_nombre': 'coordinador',
+        'rol_nombre': 'coordinador_egresados',
         'documento': 'SEED-00000004',
     },
     {

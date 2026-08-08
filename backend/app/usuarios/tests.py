@@ -12,7 +12,7 @@ class SeedUsuariosTest(TestCase):
     """El seed crea todos los roles y usuarios; el director es superusuario."""
 
     def test_seed_crea_roles_y_director_superusuario(self):
-        for nombre in ['administrador', 'director', 'secretario', 'coordinador',
+        for nombre in ['administrador', 'director', 'secretario', 'coordinador_egresados',
                        'profesor', 'egresado', 'estudiante']:
             Rol.objects.create(nombre=nombre)
         call_command('seed_usuarios')
@@ -27,10 +27,10 @@ class SeedUsuariosTest(TestCase):
         self.assertEqual(director.rol.nombre, 'director')
 
         coordinador = User.objects.get(email='coordinador@pisunpa.com')
-        self.assertEqual(coordinador.rol.nombre, 'coordinador')
+        self.assertEqual(coordinador.rol.nombre, 'coordinador_egresados')
 
     def test_seed_egresado_tiene_perfil(self):
-        for nombre in ['administrador', 'director', 'secretario', 'coordinador',
+        for nombre in ['administrador', 'director', 'secretario', 'coordinador_egresados',
                        'profesor', 'egresado', 'estudiante']:
             Rol.objects.create(nombre=nombre)
         call_command('seed_usuarios')
