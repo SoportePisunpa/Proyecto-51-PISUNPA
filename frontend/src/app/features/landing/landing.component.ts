@@ -688,10 +688,7 @@ interface IntegranteEquipo {
           <ul class="nav-menu">
             <li><a (click)="scrollToSection('inicio', $event)">Inicio</a></li>
             <li><a routerLink="/programa">El Programa</a></li>
-<<<<<<< HEAD
             <li><a routerLink="/malla">Malla Curricular</a></li>
-=======
->>>>>>> e809cdd94be5561e5a1e7f2a87176d8435bcaed0
             <li><a (click)="scrollToSection('acerca', $event)">Acerca de</a></li>
             <li><a routerLink="/docentes">Docentes</a></li>
             <li><a routerLink="/investigacion">Investigación</a></li>

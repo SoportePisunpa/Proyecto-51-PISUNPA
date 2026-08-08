@@ -607,10 +607,7 @@ interface SemilleroInvestigacion {
           <ul class="nav-menu">
             <li><a routerLink="/landing">Inicio</a></li>
             <li><a routerLink="/programa">El Programa</a></li>
-<<<<<<< HEAD
             <li><a routerLink="/malla">Malla Curricular</a></li>
-=======
->>>>>>> e809cdd94be5561e5a1e7f2a87176d8435bcaed0
             <li><a routerLink="/landing" fragment="acerca">Acerca de</a></li>
             <li><a routerLink="/docentes">Docentes</a></li>
             <li><a routerLink="/investigacion" class="active">Investigación</a></li>
