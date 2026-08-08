@@ -37,6 +37,43 @@ export class UsuariosService {
       .pipe(map(u => this.normalizar(u)));
   }
 
+  listarEstudiantes(q?: string, programa?: string): Observable<Usuario[]> {
+    const params: string[] = [];
+    if (q) params.push(`q=${encodeURIComponent(q)}`);
+    if (programa) params.push(`programa=${encodeURIComponent(programa)}`);
+    const suffix = params.length ? `?${params.join('&')}` : '';
+    return this.http.get<any[]>(`${this.apiUrl}/estudiantes/${suffix}`)
+      .pipe(map(list => list.map(u => this.normalizar(u))));
+  }
+
+  importarEstudiantes(archivo: File): Observable<{ creados: number; duplicados: number; errores: string[]; total_procesados: number }> {
+    const formData = new FormData();
+    formData.append('archivo', archivo);
+    return this.http.post<any>(`${this.apiUrl}/estudiantes/importar/`, formData);
+  }
+
+  pendientes(): Observable<Usuario[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/estudiantes-pendientes/`)
+      .pipe(map(list => list.map(u => this.normalizar(u))));
+  }
+
+  aprobar(id: string): Observable<unknown> {
+    return this.http.patch(`${this.apiUrl}/usuarios/${id}/aprobar/`, {});
+  }
+
+  rechazar(id: string): Observable<unknown> {
+    return this.http.patch(`${this.apiUrl}/usuarios/${id}/rechazar/`, {});
+  }
+
+  cambiarPrograma(id: string, programaId: string | null): Observable<Usuario> {
+    return this.http.patch<any>(`${this.apiUrl}/usuarios/${id}/programa/`, { programa: programaId })
+      .pipe(map(u => this.normalizar(u)));
+  }
+
+  promoverEgresado(id: string, programaId?: string | null): Observable<unknown> {
+    return this.http.patch(`${this.apiUrl}/usuarios/${id}/promover-egresado/`, { programa_id: programaId ?? null });
+  }
+
   private normalizar(u: any): Usuario {
     return {
       ...u,

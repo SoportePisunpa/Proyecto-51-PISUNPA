@@ -16,7 +16,6 @@ import { PortalEgresadoComponent } from './features/portal-egresado/portal-egres
 import { RegistroManualComponent } from './features/registro-manual/registro-manual.component';
 import { RegistroDocenteComponent } from './features/registro-docente/registro-docente.component';
 import { RegistroEstudianteComponent } from './features/registro-estudiante/registro-estudiante.component';
-import { EstudiantesPendientesComponent } from './features/admin/estudiantes-pendientes/estudiantes-pendientes.component';
 import { ProfesoresComponent } from './features/admin/profesores/profesores.component';
 import { AsignacionProfesoresComponent } from './features/admin/asignacion-profesores/asignacion-profesores.component';
 import { ProgramaComponent } from './features/programa/programa.component';
@@ -57,7 +56,16 @@ export const routes: Routes = [
   { path: 'egresado/perfil', component: PortalEgresadoComponent, canActivate: [authGuard, roleGuard], data: { roles: rolesEstudiante } },
   { path: 'admin/bandeja-supletorios', component: BandejaSupletoriosComponent, canActivate: [authGuard, roleGuard], data: { roles: rolesAdmin } },
   { path: 'profesor/supletorios-pendientes', component: SupletoriosPendientesComponent, canActivate: [authGuard, roleGuard], data: { roles: ['profesor'] as Rol[] } },
-  { path: 'admin/estudiantes-pendientes', component: EstudiantesPendientesComponent, canActivate: [authGuard, roleGuard], data: { roles: rolesAdmin } },
+  {
+    path: 'admin/gestion-estudiantes',
+    loadComponent: () =>
+      import('./features/admin/gestion-estudiantes/gestion-estudiantes.component').then(
+        (m) => m.GestionEstudiantesComponent
+      ),
+    canActivate: [authGuard, roleGuard],
+    data: { roles: rolesAdmin },
+  },
+  { path: 'admin/estudiantes-pendientes', redirectTo: 'admin/gestion-estudiantes', pathMatch: 'full' },
   { path: 'admin/profesores', component: ProfesoresComponent, canActivate: [authGuard, roleGuard], data: { roles: rolesAdmin } },
   { path: 'admin/asignacion-profesores', component: AsignacionProfesoresComponent, canActivate: [authGuard, roleGuard], data: { roles: rolesAdmin } },
   { path: 'admin/gestion-egresados', component: GestionEgresadosComponent, canActivate: [authGuard, roleGuard], data: { roles: rolesAdmin } },

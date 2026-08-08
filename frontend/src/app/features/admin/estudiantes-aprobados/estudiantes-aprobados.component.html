@@ -1,0 +1,152 @@
+<div class="filtros management-toolbar">
+  <input type="search" aria-label="Buscar estudiantes" placeholder="Buscar por nombre o email..."
+    [value]="filtroNombre()" (input)="filtroNombre.set($any($event.target).value)" />
+  <select aria-label="Filtrar por programa" [value]="filtroPrograma()"
+    (change)="onFiltroPrograma($any($event.target).value)">
+    <option value="">Todos los programas</option>
+    @for (p of programas(); track p.id) {
+      <option [value]="p.id">{{ p.nombre }}</option>
+    }
+  </select>
+  @if (hayFiltrosActivos()) {
+    <button type="button" (click)="limpiarFiltros()">Limpiar filtros</button>
+  }
+</div>
+
+@if (cargando()) {
+  <p class="cargando">Cargando estudiantes...</p>
+} @else {
+  <p class="contador">{{ estudiantesFiltrados().length }} estudiante(s) encontrado(s)</p>
+}
+
+<div class="table-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre Completo</th>
+        <th>Correo</th>
+        <th>Documento</th>
+        <th>Programa</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (e of estudiantesFiltrados(); track e.id) {
+        <tr>
+          <td>{{ e.first_name }} {{ e.last_name }}</td>
+          <td>{{ e.email }}</td>
+          <td>{{ e.documento || '—' }}</td>
+          <td>
+            @if (e.programa) {
+              <span class="programa-badge">{{ e.programa.nombre }}</span>
+            } @else {
+              <span class="programa-badge vacio">Sin programa</span>
+            }
+          </td>
+          <td class="acciones">
+            <button class="btn-editar" (click)="abrirPrograma(e)">Programa</button>
+            <button class="btn-promover" (click)="solicitarPromover(e)">Promover a egresado</button>
+          </td>
+        </tr>
+      } @empty {
+        @if (!cargando()) {
+          <tr>
+            <td colspan="5" class="vacio">
+              @if (hayFiltrosActivos()) {
+                No se encontraron estudiantes con los filtros aplicados.
+              } @else {
+                No hay estudiantes aprobados.
+              }
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>
+
+<div class="importar-section">
+  <div class="importar-header">
+    <h3>Importar Estudiantes por Excel</h3>
+  </div>
+  <p class="importar-descripcion">
+    Carga masiva de estudiantes mediante un archivo CSV o Excel. Prepara tu archivo con los campos:
+    <strong>nombre completo, email y programa (opcional)</strong>.
+  </p>
+
+  <div class="importar-dropzone"
+    [class.arrastrando]="arrastrandoImportacion()"
+    (dragover)="onDragOverImportacion($event)"
+    (dragleave)="onDragLeaveImportacion($event)"
+    (drop)="onDropImportacion($event)"
+    (click)="fileImportacionInput.click()">
+    <div class="importar-dropzone-texto">
+      Arrastra tu archivo CSV o Excel aquí, o <strong>haz clic para seleccionar</strong>
+    </div>
+    <input #fileImportacionInput class="importar-dropzone-input" type="file"
+      accept=".csv,.xls,.xlsx"
+      (change)="onFileImportacionSelected($event)" />
+  </div>
+
+  @if (archivoImportacion()) {
+    <div class="archivo-importado">
+      <div class="archivo-importado-info">
+        <div class="nombre">{{ archivoImportacion()!.name }}</div>
+        <div class="detalle">{{ (archivoImportacion()!.size / 1024).toFixed(1) }} KB</div>
+      </div>
+      <button class="btn-quitar-archivo" type="button" (click)="eliminarArchivoImportacion()">Quitar</button>
+    </div>
+  }
+
+  <button class="btn-importar" type="button"
+    [disabled]="!archivoImportacion() || importando()"
+    (click)="procesarImportacion()">
+    {{ importando() ? 'Procesando...' : 'Importar estudiantes' }}
+  </button>
+
+  <p class="formatos-ayuda">Formatos soportados: .csv, .xls, .xlsx — Tamaño máximo: 10 MB</p>
+
+  @if (resultadoImportacion(); as r) {
+    <div class="card-resumen">
+      <strong>Resultado de importación:</strong>
+      {{ r.creados }} creados, {{ r.duplicados }} duplicados
+      @if (r.errores.length) {
+        <span class="errores"> — {{ r.errores.length }} errores</span>
+        <ul>
+          @for (e of r.errores; track e) {
+            <li>{{ e }}</li>
+          }
+        </ul>
+      }
+    </div>
+  }
+</div>
+
+@if (mostrarModalPrograma() && estudiantePrograma(); as e) {
+  <app-modal titulo="Asignar programa" (cerrar)="cerrarModalPrograma()">
+    <div class="modal-cuerpo">
+      <p>Estudiante: <strong>{{ e.first_name }} {{ e.last_name }}</strong></p>
+      <label for="select-programa">Programa</label>
+      <select id="select-programa" [value]="programaSeleccionado()"
+        (change)="programaSeleccionado.set($any($event.target).value)">
+        <option value="">Sin programa</option>
+        @for (p of programas(); track p.id) {
+          <option [value]="p.id">{{ p.nombre }}</option>
+        }
+      </select>
+      <div class="modal-acciones">
+        <button type="button" class="btn-secundario" (click)="cerrarModalPrograma()">Cancelar</button>
+        <button type="button" class="btn-guardar" (click)="guardarPrograma()">Guardar</button>
+      </div>
+    </div>
+  </app-modal>
+}
+
+@if (estudiantePromover(); as e) {
+  <app-confirm-dialog
+    titulo="Promover a egresado"
+    [mensaje]="'Se promoverá a ' + e.first_name + ' ' + e.last_name + ' al rol egresado.'"
+    (confirmar)="confirmarPromover()"
+    (cancelar)="cancelarPromover()"
+  />
+}

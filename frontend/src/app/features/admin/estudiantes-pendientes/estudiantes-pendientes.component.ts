@@ -1,8 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject, signal, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../../../core/auth/auth.service';
-import { environment } from '../../../../environments/environment';
+import { UsuariosService } from '../../../services/usuarios.service';
 import { Usuario } from '../../../models/usuario.model';
 
 @Component({
@@ -11,7 +9,7 @@ import { Usuario } from '../../../models/usuario.model';
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="contenedor">
+    <div class="tab-contenido">
       <h2>Usuarios Pendientes de Aprobación</h2>
       <p class="subtitulo">Solicitudes de registro de estudiantes y egresados pendientes de validación.</p>
 
@@ -61,8 +59,8 @@ import { Usuario } from '../../../models/usuario.model';
     </div>
   `,
   styles: [`
-    .contenedor {
-      padding: 1.5rem;
+    .tab-contenido {
+      padding: 0;
     }
     h2 {
       color: #0a2463;
@@ -164,10 +162,12 @@ import { Usuario } from '../../../models/usuario.model';
   `]
 })
 export class EstudiantesPendientesComponent implements OnInit {
-  private http = inject(HttpClient);
+  private usuariosService = inject(UsuariosService);
 
   usuarios = signal<Usuario[]>([]);
   cargando = signal(true);
+
+  conteoCambio = output<number>();
 
   ngOnInit(): void {
     this.cargarPendientes();
@@ -185,28 +185,35 @@ export class EstudiantesPendientesComponent implements OnInit {
   }
 
   cargarPendientes(): void {
-    this.http.get<Usuario[]>(`${environment.apiUrl}/usuarios/estudiantes-pendientes/`).subscribe({
+    this.cargando.set(true);
+    this.usuariosService.pendientes().subscribe({
       next: (data) => {
         this.usuarios.set(data);
         this.cargando.set(false);
+        this.conteoCambio.emit(data.length);
       },
-      error: () => this.cargando.set(false)
+      error: () => {
+        this.cargando.set(false);
+        this.conteoCambio.emit(0);
+      },
     });
   }
 
   aprobar(id: string): void {
-    this.http.patch(`${environment.apiUrl}/usuarios/usuarios/${id}/aprobar/`, {}).subscribe({
+    this.usuariosService.aprobar(id).subscribe({
       next: () => {
         this.usuarios.update(lista => lista.filter(u => u.id !== id));
-      }
+        this.conteoCambio.emit(this.usuarios().length);
+      },
     });
   }
 
   rechazar(id: string): void {
-    this.http.patch(`${environment.apiUrl}/usuarios/usuarios/${id}/rechazar/`, {}).subscribe({
+    this.usuariosService.rechazar(id).subscribe({
       next: () => {
         this.usuarios.update(lista => lista.filter(u => u.id !== id));
-      }
+        this.conteoCambio.emit(this.usuarios().length);
+      },
     });
   }
 }

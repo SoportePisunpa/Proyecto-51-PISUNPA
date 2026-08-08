@@ -13,4 +13,5 @@ export interface Usuario {
   telefono?: string;
   foto?: string;
   estado?: 'pendiente_aprobacion' | 'aprobado' | 'rechazado';
+  programa?: { id: string; nombre: string } | null;
 }

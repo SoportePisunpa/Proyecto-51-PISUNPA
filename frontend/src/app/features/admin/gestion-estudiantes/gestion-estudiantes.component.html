@@ -1,0 +1,28 @@
+<div class="contenedor">
+  <div class="admin-header">
+    <div>
+      <h2>Gestión de Estudiantes</h2>
+      <p class="subtitulo">Administra estudiantes aprobados y solicitudes de registro pendientes</p>
+    </div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button type="button" class="tab" [class.activa]="tabActiva() === 'aprobados'"
+      role="tab" (click)="tabActiva.set('aprobados')">
+      Estudiantes Aprobados
+    </button>
+    <button type="button" class="tab" [class.activa]="tabActiva() === 'pendientes'"
+      role="tab" (click)="tabActiva.set('pendientes')">
+      Solicitudes Pendientes
+      @if (conteoPendientes() > 0) {
+        <span class="tab-badge">{{ conteoPendientes() }}</span>
+      }
+    </button>
+  </div>
+
+  @if (tabActiva() === 'aprobados') {
+    <app-estudiantes-aprobados />
+  } @else {
+    <app-estudiantes-pendientes (conteoCambio)="onConteoCambio($event)" />
+  }
+</div>
