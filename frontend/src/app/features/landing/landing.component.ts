@@ -1064,11 +1064,11 @@ export class LandingComponent {
       fotoUrl: 'assets/images/desarrolladores/JUAN.jpeg'
     },
     {
-      nombre: 'Santiago Mosquera',
+      nombre: 'DARIO RESTREPO LANDAZURY',
       cargo: 'Desarrollador Backend Servicios',
       area: 'Backend',
       descripcion: 'Servicios para módulos de supletorios y egresados y validaciones del negocio.',
-      fotoUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=256&q=80'
+      fotoUrl: 'assets/images/desarrolladores/DARIO.jpg'
     },
     {
       nombre: 'Mateo Alejandro Quiñones',
