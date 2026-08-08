@@ -249,7 +249,7 @@ class GestionUsuariosTest(TestCase):
         self.rol_director = Rol.objects.create(nombre='director')
         self.rol_secretario = Rol.objects.create(nombre='secretario')
         self.rol_estudiante = Rol.objects.create(nombre='estudiante')
-        Rol.objects.create(nombre='coordinador')
+        Rol.objects.create(nombre='coordinador_egresados')
 
         self.admin = User.objects.create_user(
             username='admin@test.com', email='admin@test.com',
@@ -332,11 +332,11 @@ class GestionUsuariosTest(TestCase):
             'last_name': 'Admin',
             'documento': 'A99',
             'password': 'StrongPass1!',
-            'rol': 'coordinador',
+            'rol': 'coordinador_egresados',
         }, format='json')
         self.assertEqual(response.status_code, 201)
         usuario = User.objects.get(email='nuevo.admin@test.com')
-        self.assertEqual(usuario.rol.nombre, 'coordinador')
+        self.assertEqual(usuario.rol.nombre, 'coordinador_egresados')
         self.assertEqual(usuario.estado, 'aprobado')
 
     def test_crear_admin_no_acepta_director(self):
@@ -358,7 +358,7 @@ class NotificacionFanOutTest(TestCase):
         from app.usuarios.models import Notificacion
         self.Notificacion = Notificacion
         self.rol_secretario = Rol.objects.create(nombre='secretario')
-        self.rol_coordinador = Rol.objects.create(nombre='coordinador')
+        self.rol_coordinador = Rol.objects.create(nombre='coordinador_egresados')
         self.rol_egresado = Rol.objects.create(nombre='egresado')
         self.secretario = User.objects.create_user(
             username='sec@test.com', email='sec@test.com',
@@ -383,7 +383,7 @@ class NotificacionFanOutTest(TestCase):
             titulo='Evento nuevo',
             mensaje='Se creó un evento.',
             tipo='evento_creado',
-            roles_broadcast=['secretario', 'coordinador'],
+            roles_broadcast=['secretario', 'coordinador_egresados'],
         )
         self.assertTrue(
             self.Notificacion.objects.filter(usuario=self.secretario).exists()
@@ -402,7 +402,7 @@ class NotificacionFanOutTest(TestCase):
             titulo='Prueba',
             mensaje='Mensaje',
             tipo='evento_inscripcion',
-            roles_broadcast=['secretario', 'coordinador'],
+            roles_broadcast=['secretario', 'coordinador_egresados'],
         )
         self.assertEqual(
             self.Notificacion.objects.filter(usuario=self.secretario).count(), 1
@@ -474,7 +474,7 @@ class GestionRolesJerarquiaTest(TestCase):
         self.rol_admin = Rol.objects.create(nombre='administrador')
         self.rol_director = Rol.objects.create(nombre='director')
         self.rol_secretario = Rol.objects.create(nombre='secretario')
-        self.rol_coordinador = Rol.objects.create(nombre='coordinador')
+        self.rol_coordinador = Rol.objects.create(nombre='coordinador_egresados')
         self.rol_estudiante = Rol.objects.create(nombre='estudiante')
         self.rol_profesor = Rol.objects.create(nombre='profesor')
 
@@ -544,11 +544,11 @@ class GestionRolesJerarquiaTest(TestCase):
         self.client.force_authenticate(user=self.director)
         response = self.client.patch(
             f'/api/usuarios/usuarios/{self.otro_admin.id}/rol/',
-            {'rol': 'coordinador'}, format='json'
+            {'rol': 'coordinador_egresados'}, format='json'
         )
         self.assertEqual(response.status_code, 200)
         self.otro_admin.refresh_from_db()
-        self.assertEqual(self.otro_admin.rol.nombre, 'coordinador')
+        self.assertEqual(self.otro_admin.rol.nombre, 'coordinador_egresados')
 
     def test_admin_no_puede_crear_cuenta_administrador(self):
         self.client.force_authenticate(user=self.admin)

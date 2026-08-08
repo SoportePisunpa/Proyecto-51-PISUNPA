@@ -312,7 +312,7 @@ class CambioRolSerializer(serializers.Serializer):
 
 
 class CrearAdminSerializer(serializers.Serializer):
-    ROLES_CREABLES = ('administrador', 'coordinador', 'secretario', 'profesor')
+    ROLES_CREABLES = ('administrador', 'coordinador_egresados', 'secretario', 'profesor')
     email = serializers.EmailField()
     first_name = serializers.CharField(max_length=150)
     last_name = serializers.CharField(max_length=150, allow_blank=True, default='')
@@ -340,7 +340,7 @@ class CrearAdminSerializer(serializers.Serializer):
             )
         if value not in self.ROLES_CREABLES:
             raise serializers.ValidationError(
-                'El rol debe ser administrador, coordinador, secretario o profesor.'
+                'El rol debe ser administrador, coordinador de egresados, secretario o profesor.'
             )
         return value
 

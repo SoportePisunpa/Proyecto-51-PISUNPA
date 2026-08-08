@@ -244,7 +244,7 @@ class EventoViewSet(viewsets.ModelViewSet):
         if self.action != 'list':
             return qs
         if getattr(self.request.user, 'rol', None) and self.request.user.rol.nombre in (
-            'coordinador', 'administrador', 'director'
+            'coordinador_egresados', 'administrador', 'director'
         ):
             return qs
         return qs.filter(fecha__gte=date.today())
@@ -305,7 +305,7 @@ class EventoViewSet(viewsets.ModelViewSet):
             mensaje=f'{inscripcion.nombre_egresado} se inscribió en "{evento.nombre}".',
             tipo='evento_inscripcion',
             evento=evento,
-            roles_broadcast=['secretario', 'coordinador'],
+            roles_broadcast=['secretario', 'coordinador_egresados'],
         )
         return Response(
             InscripcionEventoSerializer(inscripcion).data,
@@ -332,7 +332,7 @@ class EventoViewSet(viewsets.ModelViewSet):
             mensaje=f'{inscripcion.nombre_egresado} canceló su inscripción en "{evento.nombre}".',
             tipo='evento_cancelacion',
             evento=evento,
-            roles_broadcast=['secretario', 'coordinador'],
+            roles_broadcast=['secretario', 'coordinador_egresados'],
         )
         return Response({'detail': 'Inscripción cancelada.'})
 
