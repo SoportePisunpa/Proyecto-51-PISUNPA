@@ -1,6 +1,10 @@
+import io
+
 from django.test import TestCase, override_settings
 from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management import call_command
+from openpyxl import Workbook
 from rest_framework.test import APIClient
 from app.usuarios.models import Rol
 
@@ -641,3 +645,113 @@ class GestionRolesJerarquiaTest(TestCase):
         self.assertEqual(response.status_code, 201)
         usuario = User.objects.get(email='prof.nuevo@test.com')
         self.assertEqual(usuario.rol.nombre, 'profesor')
+
+
+@override_settings(ROOT_URLCONF='core_project.urls')
+class EstudiantesGestionTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.rol_admin = Rol.objects.create(nombre='administrador')
+        self.rol_estudiante = Rol.objects.create(nombre='estudiante')
+        self.rol_egresado = Rol.objects.create(nombre='egresado')
+
+        from app.egresados.models import Programa
+        self.programa = Programa.objects.create(nombre='Derecho')
+
+        self.admin = User.objects.create_user(
+            username='admin@p.com', email='admin@p.com', password='x',
+            documento='A1', rol=self.rol_admin, estado='aprobado')
+        self.estudiante = User.objects.create_user(
+            username='ana@p.com', email='ana@p.com', password='x',
+            first_name='Ana', last_name='López', documento='A2',
+            rol=self.rol_estudiante, estado='aprobado', programa=self.programa)
+        User.objects.create_user(
+            username='leo@p.com', email='leo@p.com', password='x',
+            first_name='Leo', last_name='Pérez', documento='A3',
+            rol=self.rol_estudiante, estado='pendiente_aprobacion')
+        User.objects.create_user(
+            username='eg@p.com', email='eg@p.com', password='x',
+            first_name='Eva', last_name='Ríos', documento='A4',
+            rol=self.rol_egresado, estado='aprobado')
+
+        self.client.force_authenticate(user=self.admin)
+
+    def _build_xlsx(self, rows):
+        wb = Workbook()
+        ws = wb.active
+        for i, row in enumerate(rows, start=3):
+            for j, val in enumerate(row):
+                ws.cell(row=i, column=j + 1, value=val)
+        buf = io.BytesIO()
+        wb.save(buf)
+        buf.seek(0)
+        return SimpleUploadedFile(
+            'estudiantes.xlsx', buf.read(),
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+    def test_lista_solo_estudiantes_aprobados(self):
+        response = self.client.get('/api/usuarios/estudiantes/')
+        self.assertEqual(response.status_code, 200)
+        ids = [u['id'] for u in response.json()]
+        self.assertEqual(ids, [str(self.estudiante.id)])
+
+    def test_lista_filtra_por_q_y_programa(self):
+        response = self.client.get('/api/usuarios/estudiantes/?q=Ana')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 1)
+        response = self.client.get('/api/usuarios/estudiantes/?q=inexistente')
+        self.assertEqual(len(response.json()), 0)
+        response = self.client.get(f'/api/usuarios/estudiantes/?programa={self.programa.id}')
+        self.assertEqual(len(response.json()), 1)
+
+    def test_lista_devuelve_programa(self):
+        response = self.client.get('/api/usuarios/estudiantes/')
+        data = response.json()[0]
+        self.assertEqual(data['programa'], {'id': str(self.programa.id), 'nombre': 'Derecho'})
+
+    def test_import_crea_estudiantes_aprobados(self):
+        archivo = self._build_xlsx([
+            ['Juan Pérez', 'juan@p.com', 'Derecho'],
+            ['María García', 'maria@p.com', None],
+        ])
+        response = self.client.post('/api/usuarios/estudiantes/importar/', {'archivo': archivo}, format='multipart')
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data['creados'], 2)
+        self.assertEqual(data['duplicados'], 0)
+        juan = User.objects.get(email='juan@p.com')
+        self.assertEqual(juan.estado, 'aprobado')
+        self.assertEqual(juan.rol.nombre, 'estudiante')
+        self.assertEqual(juan.programa.nombre, 'Derecho')
+
+    def test_import_duplicados_y_emails_invalidos(self):
+        archivo = self._build_xlsx([
+            ['Ana López', 'ana@p.com', None],
+            ['Otro', 'otro@p.com', None],
+        ])
+        response = self.client.post('/api/usuarios/estudiantes/importar/', {'archivo': archivo}, format='multipart')
+        data = response.json()
+        self.assertEqual(data['creados'], 1)
+        self.assertEqual(data['duplicados'], 1)
+
+        archivo2 = self._build_xlsx([['Mal', 'no-es-email', None]])
+        response2 = self.client.post('/api/usuarios/estudiantes/importar/', {'archivo': archivo2}, format='multipart')
+        self.assertEqual(response2.json()['creados'], 0)
+        self.assertTrue(any('Email inválido' in e for e in response2.json()['errores']))
+
+    def test_cambiar_programa(self):
+        from app.egresados.models import Programa as ProgramaModel
+        nuevo = ProgramaModel.objects.create(nombre='Ingeniería')
+        response = self.client.patch(
+            f'/api/usuarios/usuarios/{self.estudiante.id}/programa/',
+            {'programa': str(nuevo.id)}, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.estudiante.refresh_from_db()
+        self.assertEqual(self.estudiante.programa, nuevo)
+
+        response = self.client.patch(
+            f'/api/usuarios/usuarios/{self.estudiante.id}/programa/',
+            {'programa': None}, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.estudiante.refresh_from_db()
+        self.assertIsNone(self.estudiante.programa)
