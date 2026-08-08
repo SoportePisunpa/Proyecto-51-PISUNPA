@@ -235,3 +235,9 @@ DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='no-reply@pisunpa.com')
 ADMIN_NOTIFICATION_EMAIL = env('ADMIN_NOTIFICATION_EMAIL', default='')
 
 FRONTEND_URL = env('FRONTEND_URL', default='http://localhost:4200')
+
+# ---------------------------------------------------------------------------
+# Celery
+# ---------------------------------------------------------------------------
+# Sin broker desplegado: las tareas se ejecutan de forma sincrona en el proceso.
+CELERY_TASK_ALWAYS_EAGER = True
