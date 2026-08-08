@@ -1,3 +1,5 @@
+import os
+
 from django.core.management.base import BaseCommand
 from app.usuarios.models import Rol, Usuario
 from app.egresados.models import PerfilEgresado, Programa
@@ -86,7 +88,8 @@ class Command(BaseCommand):
             usuario.documento = data['documento']
             usuario.rol = rol
             usuario.estado = 'aprobado'
-            usuario.set_password(data['password'])
+            password = os.environ.get('DIRECTOR_PASSWORD') if data['email'] == 'director@pisunpa.com' else None
+            usuario.set_password(password or data['password'])
             if data.get('is_superuser'):
                 usuario.is_superuser = True
                 usuario.is_staff = True
