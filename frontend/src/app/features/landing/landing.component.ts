@@ -1165,11 +1165,11 @@ Sus principales áreas de interés incluyen la Ciencia de Datos, la Inteligencia
       fotoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=256&q=80'
     },
     {
-      nombre: 'Camilo Andrés Córdoba',
-      cargo: 'Desarrollador Frontend Angular',
+      nombre: 'Jefferson Manuel Valencia Riascos',
+      cargo: 'Desarrollador Frontend UI/UX',
       area: 'Frontend',
-      descripcion: 'Desarrollo de componentes web, navegación de vistas e integración reactiva.',
-      fotoUrl: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=256&q=80'
+      descripcion: 'Diseño visual de interfaz de usuario, maquetación adaptativa y experiencia de usuario.',
+      fotoUrl: 'assets/images/desarrolladores/Jefferson%20Valencia.jpeg'
     },
     {
       nombre: 'JUAN ROMAN CUERO ORDOÑEZ',
