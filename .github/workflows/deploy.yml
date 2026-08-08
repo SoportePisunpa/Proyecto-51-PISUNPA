@@ -27,8 +27,8 @@ jobs:
           script: |
             cd "$PROJECT_DIR"
             git pull origin main
-            docker compose down
-            docker compose up -d --build
+            docker compose build
+            docker compose up -d
 
       - name: Ejecutar migraciones de la base de datos
         uses: appleboy/ssh-action@v1.2.5
