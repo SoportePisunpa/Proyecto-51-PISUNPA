@@ -22,6 +22,10 @@ import { AsignacionProfesoresComponent } from './features/admin/asignacion-profe
 import { ProgramaComponent } from './features/programa/programa.component';
 import { DocentesComponent } from './features/docentes/docentes.component';
 import { InvestigacionComponent } from './features/investigacion/investigacion.component';
+<<<<<<< HEAD
+import { MallaComponent } from './features/malla/malla.component';
+=======
+>>>>>>> e809cdd94be5561e5a1e7f2a87176d8435bcaed0
 import { LandingComponent } from './features/landing/landing.component';
 import { authGuard } from './core/auth/auth.guard';
 import { roleGuard } from './core/auth/role.guard';
@@ -34,6 +38,10 @@ export const routes: Routes = [
   { path: 'landing', component: LandingComponent },
   { path: '', component: LandingComponent },
   { path: 'programa', component: ProgramaComponent },
+<<<<<<< HEAD
+  { path: 'malla', component: MallaComponent },
+=======
+>>>>>>> e809cdd94be5561e5a1e7f2a87176d8435bcaed0
   { path: 'docentes', component: DocentesComponent },
   { path: 'investigacion', component: InvestigacionComponent },
   { path: 'login', component: LoginComponent },
