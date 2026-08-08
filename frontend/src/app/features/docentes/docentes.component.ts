@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 interface DocentePerfil {
   id: number;
@@ -17,7 +18,7 @@ interface DocentePerfil {
 @Component({
   selector: 'app-docentes',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, FormsModule],
   changeDetection: ChangeDetectionStrategy.Default,
   styles: [`
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
@@ -82,30 +83,89 @@ interface DocentePerfil {
 
     /* BODY */
     .page-body { padding: 5rem 2rem; max-width: 1350px; margin: 0 auto; }
-    .docentes-sub-header { margin-top: 1rem; margin-bottom: 2.5rem; display: flex; align-items: center; gap: 0.75rem; scroll-margin-top: 100px; }
-    .docentes-sub-header h3 { font-size: 1.75rem; font-weight: 900; color: #0f172a; letter-spacing: -0.02em; }
-    .docentes-badge-pill { background: #dcfce7; color: #15803d; font-size: 0.8rem; font-weight: 800; padding: 0.35rem 0.85rem; border-radius: 12px; }
+
+    .docentes-sub-header {
+      margin-top: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.1rem;
+      border-bottom: 2px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      scroll-margin-top: 100px;
+    }
+    .docentes-sub-header-title { display: flex; align-items: center; gap: 0.85rem; }
+    .docentes-sub-header-bar { width: 5px; height: 30px; border-radius: 3px; background: linear-gradient(180deg, #15803d, #4ade80); flex-shrink: 0; }
+    .docentes-sub-header h3 { font-size: 1.65rem; font-weight: 900; color: #0f172a; letter-spacing: -0.02em; line-height: 1.2; }
+    .docentes-sub-header p.section-caption { font-size: 0.85rem; color: #64748b; font-weight: 500; margin-top: 0.15rem; }
+    .docentes-badge-pill { background: #f0fdf4; color: #15803d; font-size: 0.78rem; font-weight: 800; padding: 0.4rem 0.9rem; border-radius: 999px; border: 1px solid #bbf7d0; white-space: nowrap; }
+
+    /* FILTER / SEARCH BAR */
+    .docentes-filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.75rem;
+    }
+    .search-input-wrap { position: relative; flex: 1 1 300px; }
+    .search-input-wrap svg { position: absolute; left: 0.95rem; top: 50%; transform: translateY(-50%); width: 17px; height: 17px; color: #94a3b8; pointer-events: none; }
+    .search-input {
+      width: 100%;
+      padding: 0.7rem 1rem 0.7rem 2.75rem;
+      border-radius: 12px;
+      border: 1.5px solid #e2e8f0;
+      background: #ffffff;
+      font-family: inherit;
+      font-size: 0.88rem;
+      color: #0f172a;
+      transition: all 0.2s ease;
+    }
+    .search-input::placeholder { color: #94a3b8; }
+    .search-input:focus { outline: none; border-color: #15803d; box-shadow: 0 0 0 4px rgba(21, 128, 61, 0.1); }
+
+    .filter-chips { display: flex; gap: 0.55rem; flex-wrap: wrap; }
+    .filter-chip {
+      padding: 0.62rem 1.1rem;
+      border-radius: 999px;
+      border: 1.5px solid #e2e8f0;
+      background: #ffffff;
+      color: #475569;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+    .filter-chip:hover { border-color: #15803d; color: #15803d; }
+    .filter-chip.active { background: #15803d; border-color: #15803d; color: #ffffff; box-shadow: 0 4px 12px rgba(21, 128, 61, 0.25); }
+
+    .results-count { font-size: 0.84rem; color: #64748b; font-weight: 500; margin-bottom: 1.25rem; }
+    .results-count strong { color: #0f172a; font-weight: 800; }
 
     /* GRIDS */
     .directivos-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
+      gap: 1.75rem;
       margin-bottom: 5rem;
     }
     .planta-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-      gap: 2rem;
-      margin-bottom: 3rem;
+      gap: 1.75rem;
+      margin-bottom: 2.5rem;
     }
 
     /* CARD MODERN */
     .docente-card {
       background: #ffffff;
       border: 1px solid #e2e8f0;
-      border-radius: 20px;
-      padding: 2rem 1.75rem;
+      border-radius: 18px;
+      padding: 1.85rem 1.65rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -113,24 +173,39 @@ interface DocentePerfil {
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
       height: 100%;
+      position: relative;
+      overflow: hidden;
     }
-    .docente-card:hover { border-color: #4ade80; transform: translateY(-8px); box-shadow: 0 20px 40px rgba(21, 128, 61, 0.08); }
+    .docente-card:hover { border-color: #86efac; transform: translateY(-6px); box-shadow: 0 20px 36px rgba(21, 128, 61, 0.1); }
 
-    .docente-card-header { display: flex; align-items: flex-start; gap: 1.25rem; margin-bottom: 1.25rem; }
-    .docente-photo { width: 75px; height: 75px; border-radius: 50%; object-fit: cover; border: 3px solid #f0fdf4; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-    .docente-meta h5 { font-size: 1.15rem; font-weight: 800; color: #0f172a; margin-bottom: 0.2rem; line-height: 1.2; }
-    .docente-cargo { font-size: 0.85rem; font-weight: 700; color: #15803d; display: block; margin-bottom: 0.25rem; }
-    .docente-exp-tag { font-size: 0.75rem; font-weight: 600; color: #64748b; margin: 0; display: flex; align-items: center; gap: 0.25rem; }
+    .docente-card-header { display: flex; align-items: flex-start; gap: 1.1rem; margin-bottom: 1.15rem; }
+    .docente-photo { width: 68px; height: 68px; border-radius: 50%; object-fit: cover; border: 3px solid #f0fdf4; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.06); }
+    .docente-meta { min-width: 0; }
+    .docente-meta h5 { font-size: 1.08rem; font-weight: 800; color: #0f172a; margin-bottom: 0.2rem; line-height: 1.25; }
+    .docente-cargo { font-size: 0.83rem; font-weight: 700; color: #15803d; display: block; margin-bottom: 0.3rem; }
+    .docente-exp-tag { font-size: 0.74rem; font-weight: 600; color: #64748b; margin: 0; display: flex; align-items: center; gap: 0.3rem; }
+    .docente-exp-tag svg { flex-shrink: 0; }
 
-    .docente-subjects { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.25rem; }
-    .subject-chip { font-size: 0.72rem; font-weight: 700; background: #f8fafc; color: #475569; padding: 0.25rem 0.65rem; border-radius: 8px; border: 1px solid #e2e8f0; }
+    .docente-subjects { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.1rem; min-height: 1.8rem; align-content: flex-start; }
+    .subject-chip { font-size: 0.71rem; font-weight: 700; background: #f8fafc; color: #475569; padding: 0.28rem 0.65rem; border-radius: 7px; border: 1px solid #e2e8f0; line-height: 1.3; }
+    .subject-chip--more { background: transparent; border-style: dashed; color: #15803d; border-color: #86efac; }
 
-    .docente-card p.mini-bio { font-size: 0.9rem; color: #475569; line-height: 1.6; margin-bottom: 1.5rem; flex-grow: 1; }
+    .docente-card p.mini-bio {
+      font-size: 0.87rem;
+      color: #475569;
+      line-height: 1.6;
+      margin-bottom: 1.35rem;
+      flex-grow: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
 
     .btn-ver-perfil {
       align-self: flex-start;
       margin-top: auto;
-      font-size: 0.85rem;
+      font-size: 0.83rem;
       font-weight: 800;
       color: #15803d;
       display: flex;
@@ -138,7 +213,7 @@ interface DocentePerfil {
       gap: 0.4rem;
       background: #f0fdf4;
       border: 1px solid #bbf7d0;
-      padding: 0.5rem 1rem;
+      padding: 0.55rem 1rem;
       border-radius: 10px;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -149,15 +224,41 @@ interface DocentePerfil {
     .btn-ver-perfil svg { width: 16px; height: 16px; transition: transform 0.2s ease; }
     .docente-card:hover .btn-ver-perfil svg { transform: translateX(4px); }
 
+    /* NO RESULTS */
+    .no-results-state {
+      text-align: center;
+      padding: 3.5rem 2rem;
+      background: #ffffff;
+      border: 1.5px dashed #cbd5e1;
+      border-radius: 18px;
+      color: #64748b;
+      margin-bottom: 2.5rem;
+    }
+    .no-results-state svg { width: 40px; height: 40px; color: #cbd5e1; margin-bottom: 0.85rem; }
+    .no-results-state p { font-size: 0.95rem; font-weight: 600; color: #334155; margin-bottom: 1rem; }
+    .no-results-clear {
+      border: 1.5px solid #15803d;
+      background: transparent;
+      color: #15803d;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.55rem 1.25rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+    .no-results-clear:hover { background: #15803d; color: #ffffff; }
+
     /* PAGINATION */
+    .pagination-wrap { display: flex; flex-direction: column; align-items: center; gap: 0.65rem; margin-top: 0.5rem; margin-bottom: 4rem; }
     .pagination-container {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
-      margin-top: 1rem;
-      margin-bottom: 4rem;
     }
+    .pagination-status { font-size: 0.8rem; color: #94a3b8; font-weight: 600; }
     .page-btn {
       width: 42px;
       height: 42px;
@@ -252,6 +353,8 @@ interface DocentePerfil {
     .modal-docente-title p { font-size: 1rem; color: #4ade80; font-weight: 700; margin-bottom: 0.5rem; }
     .modal-docente-title span { font-size: 0.85rem; color: #94a3b8; }
 
+
+
     .modal-body-content { padding: 3rem; display: flex; flex-direction: column; gap: 2.5rem; }
     .modal-section-block h5 { font-size: 0.95rem; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
     .modal-section-block h5::before { content: ''; width: 24px; height: 3px; background: #15803d; border-radius: 2px; }
@@ -271,17 +374,20 @@ interface DocentePerfil {
     .footer-links a:hover { color: #ffffff; text-decoration: underline; }
     .footer-bottom { max-width: 1240px; margin: 0 auto; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; color: rgba(255, 255, 255, 0.75); }
 
-    @media (max-width: 1024px) { 
+    @media (max-width: 1024px) {
       .directivos-grid { grid-template-columns: repeat(2, 1fr); }
     }
-    @media (max-width: 640px) { 
-      .page-hero { padding: 8rem 1.5rem 4rem; } 
-      .page-hero h1 { font-size: 2.5rem; } 
-      .landing-header { padding: 0.75rem 1.25rem; } 
-      .nav-menu { display: none; } 
+    @media (max-width: 640px) {
+      .page-hero { padding: 8rem 1.5rem 4rem; }
+      .page-hero h1 { font-size: 2.5rem; }
+      .landing-header { padding: 0.75rem 1.25rem; }
+      .nav-menu { display: none; }
       .directivos-grid, .planta-grid { grid-template-columns: 1fr; }
       .modal-header-banner { flex-direction: column; text-align: center; padding: 3rem 1.5rem 2rem; }
       .modal-body-content { padding: 2rem 1.5rem; }
+      .docentes-sub-header { align-items: flex-start; }
+      .docentes-filter-bar { flex-direction: column; align-items: stretch; }
+      .filter-chips { justify-content: flex-start; }
     }
   `],
   template: `
@@ -330,8 +436,14 @@ interface DocentePerfil {
     <main class="page-body">
       <!-- PARTE ADMINISTRATIVA -->
       <div class="docentes-sub-header">
-        <h3>Administración del Programa</h3>
-        <span class="docentes-badge-pill">Dirección & Secretaría</span>
+        <div class="docentes-sub-header-title">
+          <span class="docentes-sub-header-bar"></span>
+          <div>
+            <h3>Administración del Programa</h3>
+            <p class="section-caption">Dirección académica y gestión administrativa</p>
+          </div>
+        </div>
+        <span class="docentes-badge-pill">{{ directivosPrograma.length }} integrantes</span>
       </div>
 
       <div class="directivos-grid">
@@ -351,8 +463,11 @@ interface DocentePerfil {
               </div>
 
               <div class="docente-subjects">
-                @for (m of doc.materias; track m) {
+                @for (m of doc.materias.slice(0, 3); track m) {
                   <span class="subject-chip">{{ m }}</span>
+                }
+                @if (doc.materias.length > 3) {
+                  <span class="subject-chip subject-chip--more">+{{ doc.materias.length - 3 }}</span>
                 }
               </div>
 
@@ -372,58 +487,103 @@ interface DocentePerfil {
 
       <!-- CUERPO DOCENTE DE PLANTA -->
       <div class="docentes-sub-header" id="docentes-planta">
-        <h3>Cuerpo Docente de Planta</h3>
-        <span class="docentes-badge-pill">24 Docentes Especializados</span>
-      </div>
-
-      <div class="planta-grid">
-        @for (doc of paginatedDocentes; track doc.id) {
-          <div class="docente-card" (click)="abrirModalDocente(doc)">
-            <div>
-              <div class="docente-card-header">
-                <img [src]="doc.fotoUrl" [alt]="doc.nombre" class="docente-photo" />
-                <div class="docente-meta">
-                  <h5>{{ doc.nombre }}</h5>
-                  <span class="docente-cargo">{{ doc.cargo }}</span>
-                  <p class="docente-exp-tag">
-                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                    {{ doc.experienciaAnos }} años exp.
-                  </p>
-                </div>
-              </div>
-
-              <div class="docente-subjects">
-                @for (m of doc.materias; track m) {
-                  <span class="subject-chip">{{ m }}</span>
-                }
-              </div>
-
-              <p class="mini-bio">{{ doc.perfilMini }}</p>
-            </div>
-
-            <button class="btn-ver-perfil">
-              Ver perfil completo
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="5" y1="12" x2="19" y2="12"/>
-                <polyline points="12 5 19 12 12 19"/>
-              </svg>
-            </button>
+        <div class="docentes-sub-header-title">
+          <span class="docentes-sub-header-bar"></span>
+          <div>
+            <h3>Cuerpo Docente de Planta</h3>
+            <p class="section-caption">Profesores especializados por área de conocimiento</p>
           </div>
-        }
+        </div>
+        <span class="docentes-badge-pill">{{ docentesPlanta.length }} docentes</span>
       </div>
+
+      <!-- BUSCADOR Y FILTROS -->
+      <div class="docentes-filter-bar">
+        <div class="search-input-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Buscar por nombre, cargo o asignatura..."
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="onSearchChange()"
+          />
+        </div>
+        <div class="filter-chips">
+          <button class="filter-chip" [class.active]="activeFilter === 'todos'" (click)="setFilter('todos')">Todos</button>
+          <button class="filter-chip" [class.active]="activeFilter === 'doctorado'" (click)="setFilter('doctorado')">Doctorado</button>
+          <button class="filter-chip" [class.active]="activeFilter === 'magister'" (click)="setFilter('magister')">Magíster</button>
+        </div>
+      </div>
+
+      <p class="results-count">
+        Mostrando <strong>{{ paginatedDocentes.length }}</strong> de <strong>{{ docentesFiltrados.length }}</strong> docentes
+      </p>
+
+      @if (paginatedDocentes.length > 0) {
+        <div class="planta-grid">
+          @for (doc of paginatedDocentes; track doc.id) {
+            <div class="docente-card" (click)="abrirModalDocente(doc)">
+              <div>
+                <div class="docente-card-header">
+                  <img [src]="doc.fotoUrl" [alt]="doc.nombre" class="docente-photo" />
+                  <div class="docente-meta">
+                    <h5>{{ doc.nombre }}</h5>
+                    <span class="docente-cargo">{{ doc.cargo }}</span>
+                    <p class="docente-exp-tag">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      {{ doc.experienciaAnos }} años exp.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="docente-subjects">
+                  @for (m of doc.materias.slice(0, 3); track m) {
+                    <span class="subject-chip">{{ m }}</span>
+                  }
+                  @if (doc.materias.length > 3) {
+                    <span class="subject-chip subject-chip--more">+{{ doc.materias.length - 3 }}</span>
+                  }
+                </div>
+
+                <p class="mini-bio">{{ doc.perfilMini }}</p>
+              </div>
+
+              <button class="btn-ver-perfil">
+                Ver perfil completo
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </button>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="no-results-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto; display: block;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <p>No encontramos docentes que coincidan con tu búsqueda.</p>
+          <button class="no-results-clear" (click)="limpiarFiltros()">Limpiar filtros</button>
+        </div>
+      }
 
       <!-- PAGINATION CONTROLS -->
-      <div class="pagination-container">
-        <button class="page-btn" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">‹</button>
-        
-        @for (page of pagesArray; track page) {
-          <button class="page-btn" [class.active]="page === currentPage" (click)="changePage(page)">
-            {{ page }}
-          </button>
-        }
+      @if (totalPages > 1) {
+        <div class="pagination-wrap">
+          <div class="pagination-container">
+            <button class="page-btn" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">‹</button>
 
-        <button class="page-btn" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">›</button>
-      </div>
+            @for (page of pagesArray; track page) {
+              <button class="page-btn" [class.active]="page === currentPage" (click)="changePage(page)">
+                {{ page }}
+              </button>
+            }
+
+            <button class="page-btn" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">›</button>
+          </div>
+          <span class="pagination-status">Página {{ currentPage }} de {{ totalPages }}</span>
+        </div>
+      }
     </main>
 
     <!-- MODAL DOCENTE -->
@@ -516,7 +676,10 @@ interface DocentePerfil {
 export class DocentesComponent {
   docenteSeleccionado: DocentePerfil | null = null;
   currentPage = 1;
-  itemsPerPage = 8; // Shows 8 cards per page
+  itemsPerPage = 6; // Shows 6 cards per page
+
+  searchQuery = '';
+  activeFilter: 'todos' | 'doctorado' | 'magister' = 'todos';
 
   abrirModalDocente(doc: DocentePerfil): void {
     this.docenteSeleccionado = doc;
@@ -526,13 +689,49 @@ export class DocentesComponent {
     this.docenteSeleccionado = null;
   }
 
+  setFilter(filter: 'todos' | 'doctorado' | 'magister'): void {
+    this.activeFilter = filter;
+    this.currentPage = 1;
+  }
+
+  onSearchChange(): void {
+    this.currentPage = 1;
+  }
+
+  limpiarFiltros(): void {
+    this.searchQuery = '';
+    this.activeFilter = 'todos';
+    this.currentPage = 1;
+  }
+
+  get docentesFiltrados(): DocentePerfil[] {
+    let list = this.docentesPlanta;
+
+    if (this.activeFilter === 'doctorado') {
+      list = list.filter(d => d.titulos.some(t => t.toLowerCase().includes('doctor')));
+    } else if (this.activeFilter === 'magister') {
+      list = list.filter(d => d.titulos.some(t => t.toLowerCase().includes('magíster') || t.toLowerCase().includes('maestría')));
+    }
+
+    const q = this.searchQuery.trim().toLowerCase();
+    if (q) {
+      list = list.filter(d =>
+        d.nombre.toLowerCase().includes(q) ||
+        d.cargo.toLowerCase().includes(q) ||
+        d.materias.some(m => m.toLowerCase().includes(q))
+      );
+    }
+
+    return list;
+  }
+
   get paginatedDocentes(): DocentePerfil[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.docentesPlanta.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.docentesFiltrados.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
   get totalPages(): number {
-    return Math.ceil(this.docentesPlanta.length / this.itemsPerPage);
+    return Math.max(1, Math.ceil(this.docentesFiltrados.length / this.itemsPerPage));
   }
 
   get pagesArray(): number[] {

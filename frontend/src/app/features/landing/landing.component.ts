@@ -28,9 +28,16 @@ interface IntegranteEquipo {
       background-color: #ffffff;
       color: #0f172a;
       overflow-x: hidden;
+
+      --color-primary: #15803d;
+      --color-primary-dark: #14532d;
+      --color-ink: #0f172a;
+      --color-muted: #64748b;
+      --color-border: #e2e8f0;
+      --color-surface: #f8fafc;
     }
 
-    /* ===== NAVBAR ===== */
+    /* ===== NAVBAR (sin cambios) ===== */
     .landing-header {
       position: fixed;
       top: 0;
@@ -151,7 +158,7 @@ interface IntegranteEquipo {
       box-shadow: 0 6px 18px rgba(21, 128, 61, 0.55);
     }
 
-    /* ===== HERO SECTION ===== */
+    /* ===== HERO SECTION (sin cambios) ===== */
     .hero-section {
       position: relative;
       min-height: 90vh;
@@ -213,7 +220,10 @@ interface IntegranteEquipo {
       text-align: left;
     }
 
-    /* ===== EDITORIAL SECTIONS ===== */
+    /* ===========================================================
+       CUERPO — REDISEÑADO
+       =========================================================== */
+
     .editorial-section {
       padding: 6rem 2rem;
       max-width: 1240px;
@@ -224,28 +234,6 @@ interface IntegranteEquipo {
       height: 1px;
       background: linear-gradient(90deg, transparent 0%, #e2e8f0 50%, transparent 100%);
       margin: 5rem 0;
-    }
-
-    .feature-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: center;
-      margin-bottom: 5rem;
-    }
-
-    .feature-row.reverse {
-      direction: rtl;
-    }
-
-    .feature-row.reverse .feature-content {
-      direction: ltr;
-    }
-
-    .feature-content {
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
     }
 
     .feature-tag {
@@ -273,36 +261,36 @@ interface IntegranteEquipo {
       line-height: 1.65;
     }
 
-    /* ABOUT CARDS GRID */
+    /* ===== ACERCA DE — intro a ancho completo, ya no grid falso ===== */
+    .about-section { margin-bottom: 1rem; }
+
+    .about-intro {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      max-width: 680px;
+      margin-bottom: 3rem;
+    }
+
     .about-cards-grid {
-      grid-column: span 2;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      margin-top: 1rem;
+      gap: 1.75rem;
     }
 
     .about-card {
       background: #ffffff;
-      border: 1px solid #e2e8f0;
+      border: 1px solid var(--color-border);
       border-radius: 16px;
-      padding: 2rem 1.5rem;
+      padding: 1.85rem 1.6rem;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
-      transition: all 0.25s ease;
-    }
-
-    .about-card:hover {
-      border-color: #15803d;
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(21, 128, 61, 0.08);
     }
 
     .about-card-icon {
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       border-radius: 10px;
       background: #f0fdf4;
       color: #15803d;
@@ -312,160 +300,115 @@ interface IntegranteEquipo {
       margin-bottom: 1.25rem;
     }
 
-    .about-card-icon svg {
-      width: 22px;
-      height: 22px;
+    .about-card-icon svg { width: 21px; height: 21px; }
+
+    .about-card h4 { font-size: 1.05rem; font-weight: 800; color: #0f172a; margin-bottom: 0.55rem; }
+    .about-card p { font-size: 0.87rem; color: #64748b; line-height: 1.6; margin: 0; }
+
+    /* ===== EQUIPO — spotlight de líder + agrupado por área ===== */
+    .team-section {
+      margin-top: 5rem;
+      padding-top: 4rem;
+      border-top: 1px solid var(--color-border);
     }
 
-    .about-card h4 {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: #0f172a;
-      margin-bottom: 0.6rem;
+    .team-section-header { max-width: 620px; margin-bottom: 2.5rem; display: flex; flex-direction: column; gap: 0.55rem; }
+    .team-section-header h3 { font-size: 1.7rem; font-weight: 800; color: #0f172a; letter-spacing: -0.015em; }
+    .team-section-header p { font-size: 0.95rem; color: #64748b; }
+
+    .leader-card {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      padding: 2.25rem 2.5rem;
+      border: 1.5px solid #bbf7d0;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+      cursor: pointer;
+      transition: border-color 0.2s ease;
+      margin-bottom: 3.5rem;
+    }
+    .leader-card:hover { border-color: var(--color-primary); }
+
+    .leader-photo {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #15803d;
+      flex-shrink: 0;
     }
 
-    .about-card p {
-      font-size: 0.88rem;
-      color: #64748b;
-      line-height: 1.6;
-      margin: 0;
-    }
+    .leader-info h4 { font-size: 1.35rem; font-weight: 800; color: #0f172a; margin-bottom: 0.3rem; }
+    .leader-role { font-size: 0.8rem; font-weight: 800; color: #15803d; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.7rem; }
+    .leader-desc { font-size: 0.94rem; color: #475569; line-height: 1.6; max-width: 640px; margin-bottom: 0.9rem; }
+    .leader-cta { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.83rem; font-weight: 800; color: #15803d; }
 
-    /* ===== INDIVIDUAL 9 MEMBERS TEAM GRID ===== */
-    .individual-team-container {
-      grid-column: span 2;
-      margin-top: 3.5rem;
-    }
+    .area-group { margin-bottom: 2.5rem; }
+    .area-group:last-child { margin-bottom: 0; }
 
-    .individual-team-header {
-      margin-bottom: 2.25rem;
-    }
+    .area-label { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 1.15rem; }
+    .area-label .dot { width: 7px; height: 7px; border-radius: 50%; background: #15803d; flex-shrink: 0; }
+    .area-label .area-name { font-size: 0.78rem; font-weight: 800; color: #15803d; text-transform: uppercase; letter-spacing: 0.08em; }
+    .area-label .area-count { font-size: 0.78rem; color: #94a3b8; font-weight: 600; }
 
-    .individual-team-header h3 {
-      font-size: 1.75rem;
-      font-weight: 800;
-      color: #0f172a;
-      letter-spacing: -0.02em;
-      margin-top: 0.5rem;
-      margin-bottom: 0.35rem;
-    }
-
-    .individual-team-header p {
-      font-size: 0.95rem;
-      color: #64748b;
-    }
-
-    .team-grid-9 {
+    .area-people-row {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.75rem;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.15rem;
     }
 
     .person-card {
       background: #ffffff;
-      border: 1px solid #e2e8f0;
+      border: 1px solid var(--color-border);
       border-radius: 16px;
-      padding: 1.75rem 1.5rem;
+      padding: 1.4rem;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
-      position: relative;
+      gap: 0.9rem;
       cursor: pointer;
+      transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     }
-
     .person-card:hover {
-      border-color: #15803d;
-      transform: translateY(-4px);
-      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
     }
 
-    .person-card.leader {
-      grid-column: span 3;
-      background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
-      border: 1.5px solid #bbf7d0;
-      padding: 1.75rem 2rem;
-    }
-
-    .person-card.leader:hover {
-      border-color: #15803d;
-    }
+    .person-top { display: flex; align-items: center; gap: 0.85rem; }
 
     .person-photo-img {
-      width: 64px;
-      height: 64px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       object-fit: cover;
       flex-shrink: 0;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-      border: 2px solid #ffffff;
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 3px var(--color-border);
     }
+    .person-card:hover .person-photo-img { box-shadow: 0 0 0 2px #ffffff, 0 0 0 3px var(--color-primary); }
 
-    .person-card.leader .person-photo-img {
-      width: 80px;
-      height: 80px;
-      border: 3px solid #15803d;
-    }
+    .person-info h5 { font-size: 0.92rem; font-weight: 800; color: #0f172a; margin-bottom: 0.1rem; line-height: 1.3; }
+    .person-role { font-size: 0.72rem; font-weight: 700; color: #15803d; }
 
-    .person-header-group {
-      display: flex;
+    .person-desc { font-size: 0.82rem; color: #64748b; line-height: 1.55; margin: 0; }
+    .person-cta { font-size: 0.75rem; font-weight: 800; color: #15803d; margin-top: auto; }
+
+    /* ===== FEATURE ROWS (Supletorios / Egresados) ===== */
+    .feature-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
       align-items: center;
-      gap: 1.1rem;
-      margin-bottom: 1.1rem;
     }
 
-    .person-info h4 {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: #0f172a;
-      margin-bottom: 0.15rem;
-    }
+    .feature-row.reverse { direction: rtl; }
+    .feature-row.reverse .feature-content { direction: ltr; }
 
-    .person-role {
-      font-size: 0.8rem;
-      font-weight: 800;
-      color: #15803d;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
+    .feature-content { display: flex; flex-direction: column; gap: 1.25rem; }
 
-    .person-desc {
-      font-size: 0.88rem;
-      color: #475569;
-      line-height: 1.55;
-      margin-bottom: 1.25rem;
-    }
+    .feature-highlights { display: flex; flex-direction: column; gap: 1rem; margin-top: 0.5rem; }
 
-    .person-badge {
-      display: inline-flex;
-      align-items: center;
-      align-self: flex-start;
-      padding: 0.3rem 0.75rem;
-      background: #f1f5f9;
-      color: #334155;
-      font-size: 0.75rem;
-      font-weight: 700;
-      border-radius: 20px;
-    }
-
-    .person-card.leader .person-badge {
-      background: #15803d;
-      color: #ffffff;
-    }
-
-    .feature-highlights {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-top: 0.5rem;
-    }
-
-    .highlight-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.85rem;
-    }
+    .highlight-item { display: flex; align-items: flex-start; gap: 0.85rem; }
 
     .highlight-icon {
       width: 24px;
@@ -479,74 +422,57 @@ interface IntegranteEquipo {
       flex-shrink: 0;
       margin-top: 2px;
     }
+    .highlight-icon svg { width: 14px; height: 14px; }
 
-    .highlight-icon svg {
-      width: 14px;
-      height: 14px;
-    }
-
-    .highlight-text {
-      font-size: 0.95rem;
-      color: #334155;
-      font-weight: 600;
-      line-height: 1.4;
-    }
+    .highlight-text { font-size: 0.95rem; color: #334155; font-weight: 600; line-height: 1.4; }
 
     /* Showcase Visual Panel */
     .showcase-panel {
-      background: linear-gradient(135deg, #f8fafc 0%, #f0fdf4 100%);
-      border: 1px solid #e2e8f0;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
       border-radius: 20px;
-      padding: 3rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
-      position: relative;
-      overflow: hidden;
+      padding: 2.75rem;
     }
 
-    .showcase-panel-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-    }
+    .showcase-panel-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.75rem; }
 
     .showcase-badge-icon {
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       border-radius: 12px;
       background: #15803d;
       color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
+    .showcase-badge-icon svg { width: 21px; height: 21px; }
 
-    .showcase-badge-icon svg {
-      width: 22px;
-      height: 22px;
-    }
+    .showcase-panel-title { font-size: 1.15rem; font-weight: 800; color: #0f172a; }
 
-    .showcase-panel-title {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: #0f172a;
-    }
-
-    .step-flow {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
+    /* Flujo de pasos reales (proceso secuencial) con línea conectora */
+    .step-flow { position: relative; display: flex; flex-direction: column; gap: 1.1rem; }
+    .step-flow::before {
+      content: '';
+      position: absolute;
+      left: 16px;
+      top: 22px;
+      bottom: 22px;
+      width: 2px;
+      background: #bbf7d0;
     }
 
     .step-box {
+      position: relative;
       background: #ffffff;
-      border: 1px solid #cbd5e1;
+      border: 1px solid var(--color-border);
       border-radius: 12px;
-      padding: 1.15rem 1.35rem;
+      padding: 1.05rem 1.3rem;
       display: flex;
       align-items: center;
       gap: 1rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+      z-index: 1;
     }
 
     .step-num {
@@ -563,20 +489,39 @@ interface IntegranteEquipo {
       flex-shrink: 0;
     }
 
-    .step-info h5 {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #0f172a;
-      margin-bottom: 0.15rem;
+    .step-info h5 { font-size: 0.95rem; font-weight: 700; color: #0f172a; margin-bottom: 0.15rem; }
+    .step-info p { font-size: 0.82rem; color: #64748b; margin: 0; }
+
+    /* Lista de funcionalidades paralelas (no es un proceso, no lleva numeración) */
+    .chip-feature-list { display: flex; flex-direction: column; gap: 1rem; }
+
+    .chip-feature-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: #ffffff;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 1.05rem 1.3rem;
     }
 
-    .step-info p {
-      font-size: 0.82rem;
-      color: #64748b;
-      margin: 0;
+    .chip-feature-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #f0fdf4;
+      color: #15803d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
+    .chip-feature-icon svg { width: 18px; height: 18px; }
 
-    /* ===== FOOTER (VERDE INSTITUCIONAL ELEGANTE) ===== */
+    .chip-feature-row h5 { font-size: 0.95rem; font-weight: 700; color: #0f172a; margin-bottom: 0.15rem; }
+    .chip-feature-row p { font-size: 0.82rem; color: #64748b; margin: 0; }
+
+    /* ===== FOOTER (sin cambios) ===== */
     .landing-footer {
       background: linear-gradient(135deg, #15803d 0%, #14532d 100%);
       color: #ffffff;
@@ -724,8 +669,8 @@ interface IntegranteEquipo {
       .hero-title { font-size: 2.8rem; }
       .feature-row { grid-template-columns: 1fr; gap: 2.5rem; }
       .feature-row.reverse { direction: ltr; }
-      .about-cards-grid, .team-grid-9 { grid-template-columns: 1fr 1fr; }
-      .person-card.leader { grid-column: span 2; }
+      .about-cards-grid { grid-template-columns: 1fr 1fr; }
+      .leader-card { flex-direction: column; align-items: flex-start; text-align: left; }
       .footer-container { grid-template-columns: 1fr 1fr; }
     }
 
@@ -733,8 +678,8 @@ interface IntegranteEquipo {
       .landing-header { padding: 0.75rem 1.25rem; }
       .nav-menu { display: none; }
       .hero-title { font-size: 2.2rem; }
-      .about-cards-grid, .team-grid-9 { grid-template-columns: 1fr; }
-      .person-card.leader { grid-column: span 1; }
+      .about-cards-grid { grid-template-columns: 1fr; }
+      .area-people-row { grid-template-columns: 1fr; }
       .footer-container { grid-template-columns: 1fr; }
     }
   `],
@@ -782,11 +727,11 @@ interface IntegranteEquipo {
       </div>
     </section>
 
-    <!-- BESPOKE EDITORIAL SECTIONS -->
+    <!-- CUERPO -->
     <main class="editorial-section">
-      <!-- SECTION: ACERCA DE -->
-      <section id="acerca" class="feature-row" style="margin-bottom: 4rem;">
-        <div class="feature-content" style="grid-column: span 2;">
+      <!-- SECCIÓN: ACERCA DE -->
+      <section id="acerca" class="about-section">
+        <div class="about-intro">
           <span class="feature-tag">Programa Académico</span>
           <h2 class="feature-title">Acerca de la Plataforma PISUNPA</h2>
           <p class="feature-description">
@@ -829,63 +774,60 @@ interface IntegranteEquipo {
           </div>
         </div>
 
-        <!-- 9 PERFILES INDIVIDUALES DEL EQUIPO DESARROLLADOR -->
-        <div class="individual-team-container">
-          <div class="individual-team-header">
+        <!-- EQUIPO: LÍDER + AGRUPADO POR ÁREA -->
+        <div class="team-section">
+          <div class="team-section-header">
             <span class="feature-tag">Equipo Desarrollador</span>
             <h3>Integrantes del Proyecto PISUNPA</h3>
-            <p>Docente asesor y los 8 estudiantes desarrolladores responsables de la creación de la plataforma.</p>
+            <p>Docente asesor y los 8 estudiantes desarrolladores responsables de la creación de la plataforma. Toca cualquier perfil para ver más.</p>
           </div>
 
-          <div class="team-grid-9">
-            <!-- 1. DOCENTE ASESOR (LÍDER DESTACADO) -->
-            <div class="person-card leader" (click)="abrirModal(docenteLider)">
-              <div>
-                <div class="person-header-group">
-                  <img [src]="docenteLider.fotoUrl" [alt]="docenteLider.nombre" class="person-photo-img" />
-                  <div class="person-info">
-                    <h4>{{ docenteLider.nombre }}</h4>
-                    <span class="person-role">{{ docenteLider.cargo }}</span>
-                  </div>
-                </div>
-
-                <p class="person-desc">
-                  {{ docenteLider.descripcion }}
-                </p>
-              </div>
-
-              <span class="person-badge">{{ docenteLider.area }}</span>
+          <!-- DOCENTE ASESOR -->
+          <div class="leader-card" (click)="abrirModal(docenteLider)">
+            <img [src]="docenteLider.fotoUrl" [alt]="docenteLider.nombre" class="leader-photo" />
+            <div class="leader-info">
+              <h4>{{ docenteLider.nombre }}</h4>
+              <span class="leader-role">{{ docenteLider.cargo }}</span>
+              <p class="leader-desc">{{ docenteLider.descripcion }}</p>
+              <span class="leader-cta">
+                Ver perfil completo
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </span>
             </div>
-
-            <!-- 8 ESTUDIANTES DESARROLLADORES INDIVIDUALES -->
-            @for (estudiante of estudiantesIntegrantes; track estudiante.nombre) {
-              <div class="person-card" (click)="abrirModal(estudiante)">
-                <div>
-                  <div class="person-header-group">
-                    <img [src]="estudiante.fotoUrl" [alt]="estudiante.nombre" class="person-photo-img" />
-                    <div class="person-info">
-                      <h4>{{ estudiante.nombre }}</h4>
-                      <span class="person-role">{{ estudiante.cargo }}</span>
-                    </div>
-                  </div>
-
-                  <p class="person-desc">
-                    {{ estudiante.descripcion }}
-                  </p>
-                </div>
-
-                <span class="person-badge">
-                  {{ estudiante.area }}
-                </span>
-              </div>
-            }
           </div>
+
+          <!-- ESTUDIANTES AGRUPADOS POR ÁREA -->
+          @for (grupo of equipoPorArea; track grupo.area) {
+            <div class="area-group">
+              <div class="area-label">
+                <span class="dot"></span>
+                <span class="area-name">{{ grupo.area }}</span>
+                <span class="area-count">{{ grupo.personas.length }} {{ grupo.personas.length === 1 ? 'integrante' : 'integrantes' }}</span>
+              </div>
+
+              <div class="area-people-row">
+                @for (estudiante of grupo.personas; track estudiante.nombre) {
+                  <div class="person-card" (click)="abrirModal(estudiante)">
+                    <div class="person-top">
+                      <img [src]="estudiante.fotoUrl" [alt]="estudiante.nombre" class="person-photo-img" />
+                      <div class="person-info">
+                        <h5>{{ estudiante.nombre }}</h5>
+                        <span class="person-role">{{ estudiante.cargo }}</span>
+                      </div>
+                    </div>
+                    <p class="person-desc">{{ estudiante.descripcion }}</p>
+                    <span class="person-cta">Ver perfil →</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
         </div>
       </section>
 
       <div class="section-divider"></div>
 
-      <!-- ROW 1: SUPLETORIOS -->
+      <!-- ROW 1: SUPLETORIOS (proceso real → pasos numerados con línea) -->
       <section id="supletorios" class="feature-row">
         <div class="feature-content">
           <span class="feature-tag">Módulo Académico</span>
@@ -967,7 +909,7 @@ interface IntegranteEquipo {
 
       <div class="section-divider"></div>
 
-      <!-- ROW 2: EGRESADOS (REVERSE LAYOUT) -->
+      <!-- ROW 2: EGRESADOS (funcionalidades paralelas → lista sin numerar) -->
       <section id="egresados" class="feature-row reverse">
         <div class="feature-content">
           <span class="feature-tag">Red Institucional</span>
@@ -1019,26 +961,32 @@ interface IntegranteEquipo {
             <h3 class="showcase-panel-title">Comunidad Egresada</h3>
           </div>
 
-          <div class="step-flow">
-            <div class="step-box">
-              <div class="step-num">A</div>
-              <div class="step-info">
+          <div class="chip-feature-list">
+            <div class="chip-feature-row">
+              <div class="chip-feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>
+              </div>
+              <div>
                 <h5>Perfil de Graduado</h5>
                 <p>Información laboral actualizada y contacto continuo.</p>
               </div>
             </div>
 
-            <div class="step-box">
-              <div class="step-num">B</div>
-              <div class="step-info">
+            <div class="chip-feature-row">
+              <div class="chip-feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </div>
+              <div>
                 <h5>Eventos y Talleres</h5>
                 <p>Notificaciones a correo e inscripción activa.</p>
               </div>
             </div>
 
-            <div class="step-box">
-              <div class="step-num">C</div>
-              <div class="step-info">
+            <div class="chip-feature-row">
+              <div class="chip-feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+              </div>
+              <div>
                 <h5>Informes e Impacto</h5>
                 <p>Distribución geográfica y consolidado institucional.</p>
               </div>
@@ -1162,7 +1110,7 @@ Sus principales áreas de interés incluyen la Ciencia de Datos, la Inteligencia
       cargo: 'Desarrollador Frontend UI/UX',
       area: 'Frontend',
       descripcion: 'Diseño visual de interfaz de usuario, maquetación adaptativa y experiencia de usuario.',
-      fotoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=256&q=80'
+      fotoUrl: 'assets/images/desarrolladores/Jader.png'
     },
     {
       nombre: 'Jefferson Manuel Valencia Riascos',
@@ -1214,6 +1162,17 @@ Sus principales áreas de interés incluyen la Ciencia de Datos, la Inteligencia
       fotoUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=256&q=80'
     }
   ];
+
+  private readonly ordenAreas = ['Frontend', 'Backend', 'Base de Datos', 'Documentación & QA'];
+
+  get equipoPorArea(): { area: string; personas: IntegranteEquipo[] }[] {
+    return this.ordenAreas
+      .map((area) => ({
+        area,
+        personas: this.estudiantesIntegrantes.filter((p) => p.area === area)
+      }))
+      .filter((grupo) => grupo.personas.length > 0);
+  }
 
   scrollToSection(sectionId: string, event?: Event): void {
     if (event) {
